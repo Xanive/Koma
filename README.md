@@ -2,7 +2,7 @@
 
 An offline Windows player for anime you already have. Browse **Videos → Anime**, save folders from other drives, resume an episode, and compare Anime4K upscaling with the original side by side.
 
-Real-time upscaling uses [Anime4K by bloc97 and contributors](https://github.com/bloc97/Anime4K).
+Koma itself was completely vibe coded with Codex. Real-time upscaling uses [Anime4K by bloc97 and contributors](https://github.com/bloc97/Anime4K), and video playback uses [mpv](https://mpv.io/).
 
 ![Home screen with a saved folder, season, and local episodes](docs/home.png)
 
@@ -43,4 +43,4 @@ The first package build downloads the pinned MSYS2 engine, its corresponding sou
 
 Run **Windows build and release draft** from **Actions**, set the release version, and choose **draft**. The workflow verifies the locked engine inputs and prepares both Windows downloads together with the corresponding source for review. Follow the [release test guide](docs/Release-testing.md) before publishing.
 
-The app's source is licensed under [GPL-3.0-or-later](LICENSE). Video playback uses [mpv](https://mpv.io/).
+The app's source is licensed under [GPL-3.0-or-later](LICENSE).
