@@ -4,6 +4,7 @@ Koma's application code uses GPL-3.0-or-later. Bundled components retain their o
 
 | Component | Provenance and license |
 | --- | --- |
+| WPF UI 4.3.0 (beta 5 preview) | [WPF UI source](https://github.com/lepoco/wpfui/tree/4.3.0), MIT. Its license and third-party notices ship in both preview packages. |
 | Anime4K 4.0.1 GLSL | [bloc97/Anime4K source](https://github.com/bloc97/Anime4K/tree/v4.0.1), MIT. The [upstream Windows guide](https://github.com/bloc97/Anime4K/blob/master/md/GLSL_Instructions_Windows_MPV.md) links to the pinned Windows preset archive. The included GLSL is source code. |
 | mpv | [MSYS2 UCRT64 mpv 0.42.0-2](https://packages.msys2.org/packages/mingw-w64-ucrt-x86_64-mpv), GPL-2.0-or-later. [mpv licensing](https://github.com/mpv-player/mpv/blob/master/Copyright) |
 | FFmpeg | Shared libraries from [MSYS2 UCRT64 FFmpeg 9.0.2-4](https://packages.msys2.org/packages/mingw-w64-ucrt-x86_64-ffmpeg), GPL-3.0-or-later in this build. [FFmpeg licensing](https://ffmpeg.org/legal.html) |
