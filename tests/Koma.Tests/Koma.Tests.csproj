@@ -6,6 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../../src/Koma/UiText.cs" Link="UiText.cs" />
+    <EmbeddedResource Include="../../src/Koma/Strings/*.json" LogicalName="Koma.Strings.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="../../src/Koma/MainWindow.xaml;../../src/Koma/Controls.xaml" LogicalName="Koma.Test.%(Filename).xaml" />
     <Compile Include="../../src/Koma/Library.cs" Link="Library.cs" />
+    <Compile Include="../../src/Koma/ArtworkPolicy.cs" Link="ArtworkPolicy.cs" />
   </ItemGroup>
 </Project>

@@ -23,6 +23,7 @@ public partial class MainWindow
     private string? referenceSubtitle;
     private bool fullscreen;
     private WindowState restoreState;
+    private WindowStyle restoreStyle;
     private Rect restoreBounds;
     private Popup? controlOverlay;
     private ContextMenu? transportMenu;
@@ -35,7 +36,7 @@ public partial class MainWindow
     {
         if (!referenceReady) return;
         detailZoom = !detailZoom;
-        Detail.Content = detailZoom ? "Fit" : "Detail";
+        Detail.Content = UiText.Translate(detailZoom ? "Fit" : "Detail");
         await SyncComparison();
     }
 
@@ -118,7 +119,7 @@ public partial class MainWindow
             _ = Command("set_property", "video-zoom", 0);
         detailZoom = false;
         zoom = double.NaN;
-        Detail.Content = "Detail";
+        Detail.Content = UiText.Translate("Detail");
         Detail.IsEnabled = false;
         ReferenceWidth.Width = new(0);
         CompareHeight.Height = new(0);
@@ -222,15 +223,16 @@ public partial class MainWindow
             transport.ClearValue(WidthProperty);
             ControlsDock.Children.Add(transport);
             WindowState = WindowState.Normal;
-            WindowStyle = WindowStyle.SingleBorderWindow;
+            WindowStyle = restoreStyle;
             ResizeMode = ResizeMode.CanResize;
             Left = restoreBounds.Left;
             Top = restoreBounds.Top;
             Width = restoreBounds.Width;
             Height = restoreBounds.Height;
             WindowState = restoreState;
-            Header.Visibility = QueuePane.Visibility = Visibility.Visible;
-            SetStatus(Status.Text);
+            Header.Visibility = Visibility.Visible;
+            UpdateShell();
+            SetStatus(originalStatus);
         }
         else
         {
@@ -240,6 +242,7 @@ public partial class MainWindow
             var monitor = new MonitorInfo { Size = Marshal.SizeOf<MonitorInfo>() };
             GetMonitorInfo(MonitorFromWindow(handle, 2), ref monitor);
             restoreState = WindowState;
+            restoreStyle = WindowStyle;
             restoreBounds = WindowState == WindowState.Normal ? new(Left, Top, ActualWidth, ActualHeight) : RestoreBounds;
             WindowState = WindowState.Normal;
             WindowStyle = WindowStyle.None;
@@ -249,6 +252,7 @@ public partial class MainWindow
                     monitor.Bounds.Bottom - monitor.Bounds.Top, 0x14);
             else WindowState = WindowState.Maximized;
             Header.Visibility = QueuePane.Visibility = Status.Visibility = Visibility.Collapsed;
+            UpdateShell();
             ControlsDock.Children.Remove(transport);
             controlOverlay = new Popup {
                 Placement = PlacementMode.Relative, PlacementTarget = VideoArea,

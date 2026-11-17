@@ -5,6 +5,10 @@ using Koma;
 
 var checks = new (string Name, Action<string> Body)[]
 {
+    ("Keeps interface translations complete and preserves their format placeholders", CheckTranslations),
+    ("Resolves every localized XAML caption", CheckLocalizedXaml),
+    ("Persists the chosen interface language and recovers unsupported choices", CheckInterfaceLanguage),
+    ("Finds covers in show-first order and invalidates changed thumbnail sources", CheckArtworkPolicy),
     ("Discovers prelaunch videos, preserves seasons, and sorts Unicode names", CheckDiscovery),
     ("Discovers newly added episodes without changing a previous scan", CheckRefresh),
     ("Deduplicates file and folder inputs with a stable progress identity", CheckOverlappingSources),
@@ -51,6 +55,76 @@ foreach (var (name, check) in checks)
 
 Console.WriteLine($"{checks.Length - failed - skipped} passed, {failed} failed, {skipped} skipped");
 return failed == 0 ? 0 : 1;
+
+static void CheckTranslations(string scratch)
+{
+    var english = UiText.Catalog("en");
+    foreach (string language in new[] { "de", "fr" })
+    {
+        var translated = UiText.Catalog(language);
+        Require(english.Keys.Order().SequenceEqual(translated.Keys.Order()), "Translations should cover the same interface strings.");
+        foreach (var (key, value) in translated)
+        {
+            Require(!string.IsNullOrWhiteSpace(value) && !value.Contains('\ufffd'), "A translated caption is missing or has invalid characters.");
+            string[] originalFields = System.Text.RegularExpressions.Regex.Matches(key, @"\{\d+[^}]*\}").Select(match => match.Value).Order().ToArray();
+            string[] translatedFields = System.Text.RegularExpressions.Regex.Matches(value, @"\{\d+[^}]*\}").Select(match => match.Value).Order().ToArray();
+            Require(originalFields.SequenceEqual(translatedFields), "A translated caption changed its formatting placeholders.");
+        }
+        UiText.Select(language);
+        Require(UiText.Translate("Your library") != "Your library", "The requested interface language did not activate.");
+        Require(UiText.Episodes(2).Contains('2'), "Localized episode counts should retain their number.");
+    }
+    UiText.Select("unknown");
+    Require(UiText.Language == "en" && UiText.Translate("Your library") == "Your library", "An unsupported language should use English.");
+}
+
+static void CheckLocalizedXaml(string scratch)
+{
+    foreach (string name in new[] { "MainWindow", "Controls" })
+    {
+        using var stream = typeof(UiText).Assembly.GetManifestResourceStream($"Koma.Test.{name}.xaml")!;
+        using var reader = new StreamReader(stream);
+        foreach (System.Text.RegularExpressions.Match match in System.Text.RegularExpressions.Regex.Matches(reader.ReadToEnd(), @"\{DynamicResource Koma.Text.([^}]+)\}"))
+            Require(UiText.Catalog("en").ContainsKey(match.Groups[1].Value), "A localized XAML resource does not exist.");
+    }
+}
+
+static void CheckInterfaceLanguage(string scratch)
+{
+    string legacy = Path.Combine(scratch, "prototype.json");
+    var store = new PreferenceStore(scratch, legacy);
+    Require(store.Data.UiLanguage == "en", "Existing users should start with English.");
+    store.Data.UiLanguage = "de";
+    store.Save();
+    Require(new PreferenceStore(scratch, legacy).Data.UiLanguage == "de", "The chosen interface language should survive a restart.");
+    store.Data.UiLanguage = "fr";
+    store.Save();
+    Require(new PreferenceStore(scratch, legacy).Data.UiLanguage == "fr", "French should persist too.");
+    store.Data.UiLanguage = "unknown";
+    store.Save();
+    Require(new PreferenceStore(scratch, legacy).Data.UiLanguage == "en", "Unsupported interface choices should recover to English.");
+}
+
+static void CheckArtworkPolicy(string scratch)
+{
+    string show = Path.Combine(scratch, "Show");
+    string season = Path.Combine(show, "Season 1");
+    Directory.CreateDirectory(season);
+    string[] expected = [Path.Combine(show, "cover.jpg"), Path.Combine(show, "folder.png"), Path.Combine(season, "cover.png")];
+    foreach (string file in expected) File.WriteAllText(file, "fixture");
+    Require(ArtworkPolicy.Covers(show, season).SequenceEqual(expected), "Show covers should take priority over season covers.");
+    Require(ArtworkPolicy.Covers(show, show).Count() == 2, "The same directory should not be searched twice.");
+    string video = Path.Combine(season, "Episode 02.mkv");
+    File.WriteAllText(video, "one");
+    string first = ArtworkPolicy.Key(video);
+    File.SetLastWriteTimeUtc(video, DateTime.UtcNow.AddMinutes(-10));
+    string changedTime = ArtworkPolicy.Key(video);
+    Require(first != changedTime, "A changed source timestamp should invalidate the thumbnail.");
+    var timestamp = File.GetLastWriteTimeUtc(video);
+    File.WriteAllText(video, "a different size");
+    File.SetLastWriteTimeUtc(video, timestamp);
+    Require(changedTime != ArtworkPolicy.Key(video), "A changed source size should invalidate the thumbnail.");
+}
 
 static void CheckDiscovery(string scratch)
 {

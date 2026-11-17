@@ -9,7 +9,7 @@ namespace Koma;
 internal record Folder(Guid Id, string Path, bool IsDefault = false)
 {
     [JsonIgnore]
-    public string Name => IsDefault ? "Anime folder" : new DirectoryInfo(Path).Name;
+    public string Name => IsDefault ? UiText.Translate("Anime folder") : new DirectoryInfo(Path).Name;
 }
 
 internal record Episode(string Path, Guid? FolderId, string Relative)
@@ -21,10 +21,13 @@ internal record Episode(string Path, Guid? FolderId, string Relative)
 
 internal record Progress(double Seconds, double Duration, bool Watched, DateTimeOffset Updated);
 internal record Season(string Name, Episode[] Episodes);
-internal record Collection(string Name, Season[] Seasons);
+internal record Collection(string Name, Season[] Seasons, string Directory = "", bool IsLoose = false)
+{
+    public string DisplayName => IsLoose ? UiText.Translate("Loose videos") : Name;
+}
 internal record ScannedFolder(Folder Folder, bool Available, Collection[] Collections)
 {
-    public string Label => Available ? Folder.Name : $"{Folder.Name} · unavailable";
+    public string Label => Available ? Folder.Name : UiText.Translate("{0} · unavailable", Folder.Name);
 }
 
 internal sealed class Preferences
@@ -39,6 +42,7 @@ internal sealed class Preferences
     public string Quality { get; set; } = "Auto";
     public string AudioLanguage { get; set; } = "";
     public string SubtitleLanguage { get; set; } = "";
+    public string UiLanguage { get; set; } = "en";
     public List<Folder> Folders { get; set; } = [];
     public Dictionary<string, Progress> History { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }
@@ -82,6 +86,7 @@ internal sealed class PreferenceStore
         Data.Volume = Math.Clamp(Data.Volume, 0, 100);
         Data.AudioLanguage ??= "";
         Data.SubtitleLanguage ??= "";
+        if (!UiText.Supported(Data.UiLanguage)) Data.UiLanguage = "en";
         if (Data.Quality is not ("Auto" or "A" or "B" or "C" or "Off")) Data.Quality = "Auto";
 
         var folders = new List<Folder>();
@@ -226,7 +231,7 @@ internal static partial class Library
         if (!Directory.Exists(root.Path)) return new(root, false, []);
         var groups = new List<Collection>();
         Episode[] loose = ReadFiles(root.Path, root, seen);
-        if (loose.Length != 0) groups.Add(new("Loose videos", [new("Loose videos", loose)]));
+        if (loose.Length != 0) groups.Add(new("Loose videos", [new("Loose videos", loose)], root.Path, true));
 
         foreach (string show in ReadDirectories(root.Path))
         {
@@ -238,7 +243,7 @@ internal static partial class Library
                 string relative = Path.GetRelativePath(show, path);
                 seasons.Add(new(relative == "." ? Path.GetFileName(show) : relative, files));
             }
-            if (seasons.Count != 0) groups.Add(new(Path.GetFileName(show), [.. seasons]));
+            if (seasons.Count != 0) groups.Add(new(Path.GetFileName(show), [.. seasons], show));
         }
         return new(root, true, [.. groups]);
     }

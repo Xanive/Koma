@@ -10,7 +10,7 @@ param(
     [string]$OutputDirectory,
     [string]$PublishDirectory,
     [ValidatePattern('^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$')]
-    [string]$Version = '0.1.0-beta.4',
+    [string]$Version = '0.1.0-beta.5',
     [switch]$LocalPreview
 )
 
@@ -64,6 +64,8 @@ try {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'licenses/Anime4K-MIT.txt') -Destination $payload
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'licenses/mpv-GPL-2.0.txt') -Destination $payload
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'licenses/NSIS-COPYING.txt') -Destination $payload
+    Copy-Item -LiteralPath @((Join-Path $PSScriptRoot 'licenses/WPF-UI-MIT.txt'),
+        (Join-Path $PSScriptRoot 'licenses/WPF-UI-ThirdPartyNotices.txt')) -Destination $payload
     $runtimeConfig = Get-Content -LiteralPath (Join-Path $payload 'Koma.runtimeconfig.json') -Raw | ConvertFrom-Json
     $nugetRoot = if ($env:NUGET_PACKAGES) { $env:NUGET_PACKAGES } else { Join-Path $env:USERPROFILE '.nuget/packages' }
     foreach ($framework in $runtimeConfig.runtimeOptions.includedFrameworks) {

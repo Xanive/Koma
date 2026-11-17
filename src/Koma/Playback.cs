@@ -48,7 +48,7 @@ public partial class MainWindow
         transport.Subtitles.Click += (_, _) => TrackMenu(true);
         transport.Chapters.Click += (_, _) => ChapterMenu();
         transport.Quality.Click += (_, _) => OpenMenu(transport.Quality, new[] { "Auto", "A", "B", "C", "Off" }
-            .Select(quality => (quality is "A" or "B" or "C" ? "Mode " + quality : quality, Settings.Quality == quality,
+            .Select(quality => (quality is "A" or "B" or "C" ? UiText.Translate("Mode {0}", quality) : UiText.Translate(quality), Settings.Quality == quality,
                 (Func<Task>)(async () =>
                 {
                     Settings.Quality = quality;
@@ -93,6 +93,7 @@ public partial class MainWindow
         Remember();
         bool turnCompareBackOn = reference is not null || compareStarting || compareOnLoad;
         ClosePlayback();
+        startingPlayback = true;
         int current = generation;
         playing = episode;
         compareOnLoad = turnCompareBackOn;
@@ -152,6 +153,10 @@ public partial class MainWindow
             primary = null;
             SetStatus("Could not play this episode. Select another episode or press Next.");
             UpdateTransport();
+        }
+        finally
+        {
+            if (generation == current) { startingPlayback = false; UpdateArtworkActivity(); }
         }
     }
 
@@ -242,6 +247,7 @@ public partial class MainWindow
     private void ClosePlayback()
     {
         generation++;
+        startingPlayback = false;
         compareOnLoad = false;
         StopCompare();
         primary?.Dispose();
@@ -291,7 +297,9 @@ public partial class MainWindow
         if (!seeking) transport.Position.Value = Math.Clamp(position, 0, transport.Position.Maximum);
         transport.Position.IsEnabled = loaded && duration > 0;
         transport.Time.Text = $"{FormatTime(seeking ? transport.Position.Value : position)} / {FormatTime(duration)}";
-        transport.Play.Content = loaded && !paused ? "Pause" : "Play";
+        transport.PlayIcon.Symbol = loaded && !paused ? Wpf.Ui.Controls.SymbolRegular.Pause24 : Wpf.Ui.Controls.SymbolRegular.Play24;
+        transport.Play.ToolTip = UiText.Translate(loaded && !paused ? "Pause" : "Play");
+        System.Windows.Automation.AutomationProperties.SetName(transport.Play, (string)transport.Play.ToolTip);
         transport.Play.IsEnabled = playing is not null || queue.Count > 0;
         int index = playing is null ? -1 : queue.IndexOf(playing);
         transport.Previous.IsEnabled = index > 0;
@@ -301,12 +309,20 @@ public partial class MainWindow
         transport.Fullscreen.IsEnabled = loaded || fullscreen;
         transport.Chapters.IsEnabled = loaded && chapters.ValueKind == JsonValueKind.Array && chapters.GetArrayLength() > 0;
         transport.Volume.Value = Settings.Volume;
-        transport.Mute.Content = muted ? "Unmute" : "Mute";
+        transport.MuteIcon.Symbol = muted ? Wpf.Ui.Controls.SymbolRegular.SpeakerMute24 : Wpf.Ui.Controls.SymbolRegular.Speaker224;
+        transport.Mute.ToolTip = UiText.Translate(muted ? "Unmute" : "Mute");
+        System.Windows.Automation.AutomationProperties.SetName(transport.Mute, (string)transport.Mute.ToolTip);
         transport.Mute.IsEnabled = loaded;
         transport.Speed.Content = $"{speed:0.##}×";
-        transport.Quality.Content = Settings.Quality == "Auto" && loaded ? $"Auto · {TierName}" : Settings.Quality;
-        transport.Compare.Content = reference is null ? "Compare" : "Close compare";
-        transport.Fullscreen.Content = fullscreen ? "Exit full screen" : "⛶";
+        transport.Quality.Content = UiText.Translate("Upscaling · {0}", UiText.Translate(Settings.Quality == "Auto" && loaded ? TierName : Settings.Quality));
+        transport.Quality.ToolTip = UiText.Translate(Settings.Quality == "Auto" ? "Anime4K adjusts quality automatically to keep playback smooth" : "Anime4K upscaling quality");
+        transport.More.IsEnabled = loaded;
+        transport.Compare.Content = UiText.Translate(reference is null ? "Compare" : "Close compare");
+        CompareTitle.Text = "Anime4K · " + UiText.Translate(Settings.Quality == "Auto" ? TierName : Settings.Quality);
+        transport.FullscreenIcon.Symbol = fullscreen ? Wpf.Ui.Controls.SymbolRegular.FullScreenMinimize24 : Wpf.Ui.Controls.SymbolRegular.FullScreenMaximize24;
+        transport.Fullscreen.ToolTip = UiText.Translate(fullscreen ? "Exit fullscreen" : "Fullscreen");
+        transport.Queue.IsEnabled = !fullscreen;
+        UpdateArtworkActivity();
         updating = false;
     }
 
@@ -318,6 +334,7 @@ public partial class MainWindow
 
     private void OpenMenu(Button button, IEnumerable<(string Title, bool Selected, Func<Task> Action)> options)
     {
+        if (!button.IsVisible) button = transport.More;
         var menu = new ContextMenu {
             PlacementTarget = button, Placement = PlacementMode.Top, Style = (Style)FindResource("PlaybackMenu")
         };
@@ -338,19 +355,19 @@ public partial class MainWindow
         JsonElement[] available = tracks.ValueKind == JsonValueKind.Array
             ? tracks.EnumerateArray().Where(x => x.String("type") == type).ToArray() : [];
         var entries = new List<(string, bool, Func<Task>)> {
-            ("Off", !available.Any(track => track.Value("selected").ValueKind == JsonValueKind.True),
+            (UiText.Translate("Off"), !available.Any(track => track.Value("selected").ValueKind == JsonValueKind.True),
                 () => Command("set_property", property, "no"))
         };
         foreach (JsonElement track in available)
         {
             int id = (int)track.Value("id").Number();
-            string title = track.String("title") ?? track.String("lang") ?? $"Track {id}";
+            string title = track.String("title") ?? track.String("lang") ?? UiText.Translate("Track {0}", id);
             entries.Add((title, track.Value("selected").ValueKind == JsonValueKind.True, () => Command("set_property", property, id)));
         }
         if (subtitles)
-            entries.Add(("Open subtitle file…", false, async () =>
+            entries.Add((UiText.Translate("Open subtitle file…"), false, async () =>
             {
-                var file = new OpenFileDialog { Filter = "Subtitles|*.srt;*.ass;*.ssa;*.vtt;*.sub|All files|*.*" };
+                var file = new OpenFileDialog { Filter = UiText.Translate("Subtitles") + "|*.srt;*.ass;*.ssa;*.vtt;*.sub|" + UiText.Translate("All files") + "|*.*" };
                 if (file.ShowDialog(this) == true) await Command("sub-add", file.FileName, "select");
             }));
         OpenMenu(subtitles ? transport.Subtitles : transport.Audio, entries);
@@ -362,7 +379,7 @@ public partial class MainWindow
         OpenMenu(transport.Chapters, chapters.EnumerateArray().Select((chapter, index) =>
         {
             double target = chapter.Value("time").Number();
-            string name = chapter.String("title") ?? $"Chapter {index + 1}";
+            string name = chapter.String("title") ?? UiText.Translate("Chapter {0}", index + 1);
             return ($"{FormatTime(target)}   {name}", false, (Func<Task>)(() => Seek(target)));
         }));
     }
@@ -406,7 +423,6 @@ public partial class MainWindow
         }
         if (session != primary) return;
         IgnoreDrops();
-        CompareTitle.Text = "Anime4K · " + (Settings.Quality == "Auto" ? TierName : Settings.Quality);
         UpdateTransport();
     }
 

@@ -9,9 +9,9 @@ using Microsoft.Win32;
 
 namespace Koma;
 
-public partial class MainWindow : Window
+public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
 {
-    private const string VideoDialogFilter = Library.Filter;
+    private static string VideoDialogFilter => UiText.Translate("Video files") + Library.Filter[Library.Filter.IndexOf('|')..];
     private static readonly Guid DefaultFolderId = Library.DefaultFolderId;
     private readonly PreferenceStore store;
     private readonly Controls transport = new();
@@ -26,10 +26,11 @@ public partial class MainWindow : Window
     private bool displayingFolders;
 
     private Preferences Settings => store.Data;
-    private record EpisodeRow(Episode Episode, string Label);
+    private record EpisodeRow(Episode Episode, string Label, int Number, double Percent);
 
     public MainWindow(string[] paths)
     {
+        UiLocalization.Apply("en");
         InitializeComponent();
         string app = AppContext.BaseDirectory;
         bool portable = File.Exists(Path.Combine(app, "portable.marker"));
@@ -37,6 +38,8 @@ public partial class MainWindow : Window
         string data = portable ? Path.Combine(app, "data") : Path.Combine(local, "Koma");
         string legacy = Path.Combine(app, "portable_config", "player-settings.json");
         store = new(data, legacy, portable ? null : Path.Combine(local, "Local Anime Player"));
+        UiLocalization.Apply(Settings.UiLanguage);
+        artwork = new ArtworkCache(Path.Combine(data, "cache", "thumbnails"), Engine);
         statusDuringStartup = store.Notice;
         if (!Settings.Folders.Any(x => x.Id == DefaultFolderId))
             Settings.Folders.Insert(0, new(DefaultFolderId, Library.DefaultPath(), true));
@@ -53,6 +56,8 @@ public partial class MainWindow : Window
         QueueList.ItemsSource = queue;
         ControlsDock.Children.Add(transport);
         ConfigurePlayback();
+        transport.Queue.Click += (_, _) => ToggleQueue();
+        transport.More.Click += (_, _) => OpenMore();
         Loaded += async (_, _) =>
         {
             SetStatus(statusDuringStartup);
@@ -69,6 +74,7 @@ public partial class MainWindow : Window
             closing = true;
             scanning?.Cancel();
             opening?.Cancel();
+            artwork.Dispose();
             Remember();
             SaveSettings();
             ClosePlayback();
@@ -76,10 +82,12 @@ public partial class MainWindow : Window
     }
 
     private readonly string? statusDuringStartup;
+    private string? originalStatus;
 
     private void SetStatus(string? message)
     {
-        Status.Text = message ?? "";
+        originalStatus = message;
+        Status.Text = UiText.Translate(message ?? "");
         Status.Visibility = string.IsNullOrEmpty(message) || fullscreen ? Visibility.Collapsed : Visibility.Visible;
     }
 
@@ -99,7 +107,7 @@ public partial class MainWindow : Window
         scanning = request;
         lastScan = DateTimeOffset.UtcNow;
         var roots = Settings.Folders.ToArray();
-        if (scanned.Length == 0) LibraryMessage.Text = "Looking for episodes…";
+        if (scanned.Length == 0) LibraryMessage.Text = UiText.Translate("Looking for episodes…");
         try
         {
             ScannedFolder[] items = await Task.Run(() => Library.Scan(roots, request.Token), request.Token);
@@ -107,6 +115,7 @@ public partial class MainWindow : Window
             var selected = select ?? (Folders.SelectedItem as ScannedFolder)?.Folder.Id;
             string? seasonName = displayedSeason?.Name;
             string? seasonKey = displayedSeason?.Episodes.FirstOrDefault()?.Key;
+            if (selectedCollection is null) libraryOffset = ScrollOffset(ShowCards);
             displayingFolders = true;
             scanned = items;
             Folders.ItemsSource = scanned;
@@ -121,63 +130,41 @@ public partial class MainWindow : Window
 
     private void FolderSelected(object sender, SelectionChangedEventArgs e)
     {
-        if (!displayingFolders) RenderFolder(null, null);
+        if (!displayingFolders) { libraryOffset = 0; RenderFolder(null, null); }
     }
 
     private void RenderFolder(string? seasonName, string? episodeKey)
     {
-        displayedSeason = null;
-        Shows.Items.Clear();
         var selected = Folders.SelectedItem as ScannedFolder;
         Locate.Visibility = selected is { Available: false } ? Visibility.Visible : Visibility.Collapsed;
         RemoveRoot.Visibility = selected is { Folder.IsDefault: false } ? Visibility.Visible : Visibility.Collapsed;
-        LibraryMessage.Text = selected is null ? "" : !selected.Available ? "This folder is unavailable."
-            : selected.Collections.Length == 0 ? "Add videos to this folder, then refresh." : "";
-        TreeViewItem? first = null, previous = null;
-        foreach (Collection group in selected?.Collections ?? [])
-        {
-            var node = TreeItem(group.Name);
-            Shows.Items.Add(node);
-            if (group.Seasons.Length == 1 && group.Seasons[0].Name == group.Name)
-                Register(node, group.Seasons[0]);
-            else
-                foreach (Season season in group.Seasons)
-                {
-                    var child = TreeItem(season.Name);
-                    node.Items.Add(child);
-                    Register(child, season);
-                }
-        }
-        if ((previous ?? first) is { } match) match.IsSelected = true;
-        else RenderEpisodes();
-
-        void Register(TreeViewItem item, Season season)
-        {
-            item.Tag = season;
-            first ??= item;
-            if (season.Name == seasonName && season.Episodes.Any(x => x.Key == episodeKey)) previous = item;
-        }
-    }
-
-    private static TreeViewItem TreeItem(string title) => new() { Header = title, IsExpanded = true, Padding = new Thickness(5) };
-
-    private void SeasonSelected(object sender, RoutedPropertyChangedEventArgs<object> e)
-    {
-        displayedSeason = (e.NewValue as TreeViewItem)?.Tag as Season;
-        RenderEpisodes();
+        LibraryMessage.Text = selected is null ? "" : !selected.Available ? UiText.Translate("This folder is unavailable.")
+            : selected.Collections.Length == 0 ? UiText.Translate("Add videos to this folder, then refresh.") : "";
+        cards = (selected?.Collections ?? []).Select(group => new ShowCard(group)).ToArray();
+        ReflowCards();
+        Collection? restored = cards.Select(x => x.Collection).FirstOrDefault(group =>
+            group.Seasons.Any(season => season.Name == seasonName && season.Episodes.Any(ep => ep.Key == episodeKey)));
+        if (selectedCollection is not null && restored is not null) DisplayCollection(restored, seasonName);
+        else BackToLibrary(this, new RoutedEventArgs());
     }
 
     private void RenderEpisodes()
     {
-        EpisodeHeading.Text = displayedSeason?.Name ?? "Episodes";
+        EpisodeHeading.Text = displayedSeason is null ? UiText.Translate("Episodes") : selectedCollection?.IsLoose == true
+            ? UiText.Translate("Loose videos") : displayedSeason.Name;
         PlaySeason.IsEnabled = displayedSeason is not null;
-        Episodes.ItemsSource = displayedSeason?.Episodes.Select(episode =>
+        var selected = (Episodes.SelectedItem as EpisodeRow)?.Episode.Key;
+        double offset = ScrollOffset(Episodes);
+        Episodes.ItemsSource = displayedSeason?.Episodes.Select((episode, index) =>
         {
             Progress? progress = FindProgress(episode);
             string label = progress is { Watched: true } ? "✓  " + episode.Name
                 : progress is { Seconds: > 0 } ? $"{episode.Name}  ·  {FormatTime(progress.Seconds)}" : episode.Name;
-            return new EpisodeRow(episode, label);
+            return new EpisodeRow(episode, label, index + 1, progress is { Watched: true } ? 100 :
+                progress is { Duration: > 0 } ? Math.Clamp(progress.Seconds / progress.Duration * 100, 0, 100) : 0);
         }).ToArray();
+        Episodes.SelectedItem = Episodes.Items.Cast<EpisodeRow>().FirstOrDefault(x => x.Episode.Key == selected);
+        RestoreScroll(Episodes, offset);
     }
 
     private Progress? FindProgress(Episode episode) =>
@@ -196,7 +183,7 @@ public partial class MainWindow : Window
             if (item.Progress is { Watched: false, Seconds: > 0 } && Settings.Resume)
             {
                 continueEpisode = item.Episode;
-                ContinueButton.Content = "Resume";
+                ContinueButton.Content = UiText.Translate("Resume");
                 suggestedAt = item.Progress.Updated;
                 break;
             }
@@ -204,7 +191,7 @@ public partial class MainWindow : Window
             var next = item.Season.Episodes.Skip(item.Index + 1).FirstOrDefault(x => FindProgress(x) is not { Watched: true });
             if (next is null) continue;
             continueEpisode = next;
-            ContinueButton.Content = "Play next";
+            ContinueButton.Content = UiText.Translate("Play next");
             suggestedAt = item.Progress.Updated;
             break;
         }
@@ -217,10 +204,14 @@ public partial class MainWindow : Window
             if (recent.Key is not null)
             {
                 continueEpisode = Library.Identify(recent.Key, Settings.Folders);
-                ContinueButton.Content = "Resume";
+                ContinueButton.Content = UiText.Translate("Resume");
             }
         }
-        ContinueTitle.Text = continueEpisode?.Name ?? "";
+        string? show = continueEpisode is null ? null : scanned.SelectMany(x => x.Collections).FirstOrDefault(group =>
+            group.Seasons.Any(season => season.Episodes.Any(ep => ep.Key == continueEpisode.Key)))?.DisplayName;
+        ContinueTitle.Text = continueEpisode is null ? "" : show is null ? continueEpisode.Name : $"{show} · {continueEpisode.Name}";
+        var progress = continueEpisode is null ? null : FindProgress(continueEpisode);
+        ContinueProgress.Value = progress is { Duration: > 0 } ? Math.Clamp(progress.Seconds / progress.Duration * 100, 0, 100) : 0;
         ContinueCard.Visibility = continueEpisode is null ? Visibility.Collapsed : Visibility.Visible;
     }
 
@@ -231,6 +222,7 @@ public partial class MainWindow : Window
         Remember();
         RenderEpisodes();
         RenderContinue();
+        UpdateShell();
     }
 
     private void ShowPlayer(object sender, RoutedEventArgs e) => DisplayPlayer();
@@ -240,6 +232,7 @@ public partial class MainWindow : Window
         HomePane.Visibility = Visibility.Collapsed;
         PlayerPane.Visibility = Visibility.Visible;
         PlayerTab.IsEnabled = true;
+        UpdateShell();
     }
 
     private async void RefreshFolders(object sender, RoutedEventArgs e) => await RefreshLibrary();
@@ -278,7 +271,7 @@ public partial class MainWindow : Window
 
     private string? PickFolder()
     {
-        var picker = new OpenFolderDialog { Title = "Select an anime folder" };
+        var picker = new OpenFolderDialog { Title = UiText.Translate("Select an anime folder") };
         return picker.ShowDialog(this) == true ? Path.TrimEndingDirectorySeparator(Path.GetFullPath(picker.FolderName)) : null;
     }
 
