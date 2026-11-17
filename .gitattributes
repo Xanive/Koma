@@ -1,0 +1,2 @@
+# Preserve upstream notice bytes for the packaging checksum checks.
+packaging/licenses/*.txt -text
