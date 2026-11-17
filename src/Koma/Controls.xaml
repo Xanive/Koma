@@ -1,0 +1,26 @@
+<UserControl x:Class="Koma.Controls" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Focusable="False">
+  <Border Padding="12,5,8,9">
+    <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#EC191A24"/><GradientStop Color="#F20C0D14" Offset="1"/></LinearGradientBrush></Border.Background>
+    <StackPanel>
+      <Slider x:Name="Position" Margin="1,0,3,3" Minimum="0" AutomationProperties.Name="Playback position"/>
+      <WrapPanel>
+        <Button x:Name="Previous" Content="⏮" ToolTip="Previous episode" AutomationProperties.Name="Previous episode"/>
+        <Button x:Name="Back" Content="←" ToolTip="Seek backward" AutomationProperties.Name="Seek backward"/>
+        <Button x:Name="Play" Content="Pause" MinWidth="60"/>
+        <Button x:Name="Forward" Content="→" ToolTip="Seek forward" AutomationProperties.Name="Seek forward"/>
+        <Button x:Name="Next" Content="⏭" ToolTip="Next episode" AutomationProperties.Name="Next episode"/>
+        <TextBlock x:Name="Time" Text="0:00 / 0:00" VerticalAlignment="Center" Margin="1,0,10,0" FontSize="12"/>
+        <Button x:Name="Mute" Content="Mute"/>
+        <Slider x:Name="Volume" Width="64" Margin="0,0,8,0" Minimum="0" Maximum="100" VerticalAlignment="Center" AutomationProperties.Name="Volume"/>
+        <Button x:Name="Speed" Content="1×"/>
+        <Button x:Name="Audio" Content="Audio"/>
+        <Button x:Name="Subtitles" Content="CC" AutomationProperties.Name="Subtitles"/>
+        <Button x:Name="Chapters" Content="Chapters"/>
+        <Button x:Name="Quality" Content="Auto"/>
+        <Button x:Name="Compare" Content="Compare"/>
+        <Button x:Name="Fullscreen" Content="⛶" ToolTip="Fullscreen" AutomationProperties.Name="Fullscreen"/>
+      </WrapPanel>
+    </StackPanel>
+  </Border>
+</UserControl>

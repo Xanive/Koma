@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/Koma/Koma.csproj" />
+  <Project Path="tests/Koma.Tests/Koma.Tests.csproj" />
+</Solution>

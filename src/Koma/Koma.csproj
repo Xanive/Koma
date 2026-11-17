@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\Player.ico</ApplicationIcon>
+    <Product>Koma</Product>
+    <Description>Local anime player for Windows</Description>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Player.ico" />
+    <None Update="player-input.conf" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

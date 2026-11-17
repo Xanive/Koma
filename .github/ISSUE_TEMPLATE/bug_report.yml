@@ -1,0 +1,28 @@
+name: Report a bug
+description: Report a playback, library, or visual issue.
+title: "[Bug] "
+body:
+  - type: input
+    id: version
+    attributes:
+      label: App version and package
+      placeholder: 0.1.0-beta.1, portable ZIP
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Include what you expected to see and what happened.
+    validations:
+      required: true
+  - type: textarea
+    id: system
+    attributes:
+      label: Windows and display details
+      description: Include Windows build, GPU, display scaling, and whether fullscreen or Compare was active.
+  - type: textarea
+    id: media
+    attributes:
+      label: Media details or screenshots
+      description: A container, codec, and subtitle type can help. Remove private paths and use media you can share.
