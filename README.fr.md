@@ -8,13 +8,13 @@ Koma a été entièrement développé en « vibe coding » avec Codex. La mise �
 
 ![Bibliothèque Koma avec des vignettes vidéo générées localement](docs/screenshots/library.fr.png)
 
-Les captures montrent l'aperçu local de la bêta 5 avec des clips de test synthétiques et des noms de collections fictifs.
+Les captures montrent la bêta 5 avec des clips de test synthétiques et des noms de collections fictifs.
 
 ## État de la bêta
 
-[La bêta 4 est la version publique actuelle](https://github.com/Xanive/Koma/releases/tag/v0.1.0-beta.4). La nouvelle interface de la bêta 5 présentée ici est un aperçu local en attente de validation et de publication. Son apparence et le nouveau choix de langue de l'interface précèdent la version disponible au téléchargement.
+[La bêta 5 est la version publique actuelle](https://github.com/Xanive/Koma/releases/tag/v0.1.0-beta.5). Elle comprend la nouvelle bibliothèque, les commandes de lecture révisées et une interface en anglais, allemand ou français.
 
-L'aperçu local de la bêta 5 a réussi les vérifications automatisées de la bibliothèque, des paramètres et des vignettes, ainsi que les vérifications de lecture et d'interface à partir du paquet distribué. Son programme d'installation a été compilé. L'installation avec ce programme de la bêta 5, un environnement Windows vierge, la mise à l'échelle réelle de l'affichage et les écrans avec des réglages DPI différents, ainsi que les performances sur GPU intégré restent à tester. Consultez le [guide de test des versions](docs/Release-testing.md).
+La bêta 5 a réussi les vérifications automatisées de la bibliothèque, des paramètres, des vignettes et des traductions, ainsi que les vérifications de lecture et d'interface à partir du paquet distribué. Son programme d'installation a été compilé. L'installation avec ce programme de la bêta 5, un environnement Windows vierge, la mise à l'échelle réelle de l'affichage et les écrans avec des réglages DPI différents, ainsi que les performances sur GPU intégré restent à tester. Consultez le [guide de test des versions](docs/Release-testing.md).
 
 <details>
 <summary>Autres captures d'écran</summary>
@@ -39,7 +39,7 @@ Toutes les captures utilisent des clips de test synthétiques. Elles montrent l'
 
 1. Téléchargez le programme d'installation ou le ZIP portable pour Windows 11 x64 depuis [GitHub Releases](https://github.com/Xanive/Koma/releases). L'environnement d'exécution et le moteur de lecture sont inclus. Pour la version portable, extrayez tout le ZIP dans un dossier accessible en écriture et ouvrez `Koma.exe`.
 2. Placez les fichiers vidéo ou les dossiers de saisons dans **Videos → Anime**. Le programme d'installation crée ce dossier. L'application portable le crée au premier lancement. Vous pouvez aussi le créer vous-même auparavant.
-3. Ouvrez le lecteur et choisissez un épisode. Pour utiliser des fichiers ailleurs, sélectionnez **Add folder**. Vous pouvez aussi glisser des fichiers ou un dossier dans l'application pour lancer la lecture.
+3. Ouvrez le lecteur et choisissez un épisode. Pour utiliser des fichiers ailleurs, sélectionnez **Ajouter un dossier**. Vous pouvez aussi glisser des fichiers ou un dossier dans l'application pour lancer la lecture.
 
 Les paquets bêta ne sont pas signés. Windows peut afficher un avertissement concernant l'éditeur ou la réputation de l'application. Chaque version inclut `SHA256SUMS.txt` pour vérifier le téléchargement.
 
@@ -63,11 +63,11 @@ A, B et C ciblent différents défauts d'image. Essayez-les sur la même scène 
 
 Auto utilise les shaders plus petits M et S pour Balanced et Performance. Il revient à Balanced à chaque épisode et lorsque vous sélectionnez de nouveau Auto. Les modes manuels conservent leur préréglage. La mise à l'échelle modifie l'image affichée pendant la lecture et laisse le fichier vidéo intact.
 
-Pour examiner le résultat de plus près, choisissez **More → Compare with original**. **Detail** agrandit les deux vues. La comparaison utilise une seconde vue de lecture et augmente la charge.
+Pour examiner le résultat de plus près, choisissez **⋯ → Comparer à l’original**. **Détails** agrandit les deux vues. La comparaison utilise une seconde vue de lecture et augmente la charge.
 
 ## Lecture et bibliothèque
 
-**Audio** et **CC** permettent de changer de piste. Dans une fenêtre étroite, **More** contient aussi les commandes de vitesse et de chapitres. **Settings** permet de modifier les pas de déplacement et de volume, les préférences audio et sous-titres, ainsi que le délai de masquage des commandes en plein écran. Dans l'aperçu de la bêta 5, vous pouvez aussi choisir English, Deutsch ou Français pour l'interface. Enregistrez le réglage pour l'appliquer et conserver votre choix au prochain lancement.
+**Audio** et **CC** permettent de changer de piste. Dans une fenêtre étroite, **⋯** contient aussi les commandes de vitesse et de chapitres. **Paramètres** permet de modifier les pas de déplacement et de volume, les préférences audio et sous-titres, ainsi que le délai de masquage des commandes en plein écran. Vous pouvez aussi choisir English, Deutsch ou Français pour l'interface. Enregistrez le réglage pour l'appliquer et conserver votre choix au prochain lancement.
 
 La bibliothèque présente votre collection sous forme de cartes. Ouvrez une série pour choisir sa saison et son épisode. Pour les illustrations, placez `cover.jpg`, `cover.png`, `folder.jpg` ou `folder.png` dans le dossier de la série ou de la saison. Sinon, Koma génère une vignette à partir d'un épisode local. Les vignettes sont mises en cache dans le dossier de données de l'application et générées lorsque la lecture est inactive ou en pause.
 
@@ -87,7 +87,7 @@ La bibliothèque présente votre collection sous forme de cartes. Ouvrez une sé
 
 Koma cible Windows 11 x64. Les paquets téléchargés incluent .NET et mpv, sans installation séparée d'un environnement d'exécution. Anime4K utilise le GPU. La charge dépend de la résolution source, de la fréquence d'images, de la taille de la fenêtre ou de l'écran et du préréglage choisi. Les modes manuels A, B et C utilisent des shaders plus exigeants qu'Auto.
 
-Sur la RTX 3060 du PC de développement, une validation antérieure du moteur a lu 60 secondes de vidéo HEVC en 1080p à 24 images par seconde avec décodage matériel et aucune image perdue par le moteur de rendu ou le décodeur. Ce résultat précède la nouvelle interface de la bêta 5. La vérification du paquet local de la bêta 5 confirme la lecture et le chargement des shaders sur ce PC. Les résultats sur d'autres matériels restent à vérifier.
+Sur la RTX 3060 du PC de développement, une validation antérieure du moteur a lu 60 secondes de vidéo HEVC en 1080p à 24 images par seconde avec décodage matériel et aucune image perdue par le moteur de rendu ou le décodeur. Ce résultat précède la nouvelle interface de la bêta 5. La vérification du paquet de la bêta 5 confirme la lecture et le chargement des shaders sur ce PC. Les résultats sur d'autres matériels restent à vérifier.
 
 En cas de saccades, commencez par Auto et fermez la comparaison. Essayez Off pour vérifier les performances sans Anime4K. Des fréquences d'images et des tailles de sortie plus élevées peuvent demander plus de temps de calcul au GPU. Gardez le pilote graphique à jour.
 
@@ -95,7 +95,7 @@ En cas de saccades, commencez par Auto et fermez la comparaison. Essayez Off pou
 
 | Problème | Solution à essayer |
 | --- | --- |
-| La bibliothèque est vide | Placez des médias sous **Videos → Anime** ou utilisez **Add folder**, puis actualisez. Vérifiez qu'un disque amovible est connecté. |
+| La bibliothèque est vide | Placez des médias sous **Videos → Anime** ou utilisez **Ajouter un dossier**, puis actualisez. Vérifiez qu'un disque amovible est connecté. |
 | Les illustrations manquent | Ajoutez une image locale dans un format accepté ou mettez la lecture en pause et attendez la génération d'une vignette. Une illustration endommagée peut être remplacée par une vignette d'épisode. |
 | Anime4K n'a pas pu démarrer | Extrayez de nouveau tout le ZIP portable et conservez ensemble les fichiers des shaders et du moteur. Koma lit la vidéo originale si le chargement des shaders échoue. |
 | La lecture saccade | Choisissez Auto, fermez la comparaison et essayez Off. Consultez les remarques sur le matériel ci-dessus. |

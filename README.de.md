@@ -8,13 +8,13 @@ Koma selbst wurde vollständig per Vibe Coding mit Codex entwickelt. Das Upscali
 
 ![Koma-Bibliothek mit lokal erzeugten Video-Vorschaubildern](docs/screenshots/library.de.png)
 
-Die Screenshots zeigen die lokale Vorschau von Beta 5 mit synthetischen Testclips und beispielhaften Sammlungsnamen.
+Die Screenshots zeigen Beta 5 mit synthetischen Testclips und beispielhaften Sammlungsnamen.
 
 ## Beta-Status
 
-[Beta 4 ist die aktuelle öffentliche Version](https://github.com/Xanive/Koma/releases/tag/v0.1.0-beta.4). Die hier gezeigte Neugestaltung von Beta 5 ist eine lokale Vorschau, deren Prüfung und Veröffentlichung noch ausstehen. Das neue Aussehen und die Auswahl der Oberflächensprache sind dem öffentlichen Download voraus.
+[Beta 5 ist die aktuelle öffentliche Version](https://github.com/Xanive/Koma/releases/tag/v0.1.0-beta.5). Sie enthält die neu gestaltete Bibliothek, überarbeitete Wiedergabesteuerung und eine Oberfläche auf Englisch, Deutsch oder Französisch.
 
-Die lokale Vorschau von Beta 5 hat automatisierte Prüfungen für Bibliothek, Einstellungen und Vorschaubilder sowie Prüfungen von Wiedergabe und Oberfläche aus dem fertigen Paket bestanden. Das Installationsprogramm wurde erfolgreich erstellt. Die Installation mit diesem Beta-5-Installationsprogramm, eine frische Windows-Umgebung, echte Anzeigeskalierung und Monitore mit unterschiedlichen DPI-Einstellungen sowie die Leistung integrierter Grafik müssen noch getestet werden. Siehe die [Anleitung für Veröffentlichungstests](docs/Release-testing.md).
+Beta 5 hat automatisierte Prüfungen für Bibliothek, Einstellungen, Vorschaubilder und Übersetzungen sowie Prüfungen von Wiedergabe und Oberfläche aus dem fertigen Paket bestanden. Das Installationsprogramm wurde erfolgreich erstellt. Die Installation mit diesem Beta-5-Installationsprogramm, eine frische Windows-Umgebung, echte Anzeigeskalierung und Monitore mit unterschiedlichen DPI-Einstellungen sowie die Leistung integrierter Grafik müssen noch getestet werden. Siehe die [Anleitung für Veröffentlichungstests](docs/Release-testing.md).
 
 <details>
 <summary>Weitere Screenshots</summary>
@@ -39,7 +39,7 @@ Alle Aufnahmen verwenden synthetische Testclips. Sie zeigen die Oberfläche und 
 
 1. Lade das Installationsprogramm oder die portable ZIP-Datei für Windows 11 x64 von [GitHub Releases](https://github.com/Xanive/Koma/releases) herunter. Laufzeitumgebung und Wiedergabe-Engine sind enthalten. Entpacke für die portable Version die gesamte ZIP-Datei in einen beschreibbaren Ordner und öffne `Koma.exe`.
 2. Lege Videodateien oder Staffelordner unter **Videos → Anime** ab. Das Installationsprogramm erstellt diesen Ordner. Die portable App erstellt ihn beim ersten Start. Du kannst ihn auch vorher selbst anlegen.
-3. Öffne den Player und wähle eine Folge. Wähle **Add folder**, um Dateien an einem anderen Speicherort zu verwenden. Du kannst auch Dateien oder einen Ordner in die App ziehen, um die Wiedergabe zu starten.
+3. Öffne den Player und wähle eine Folge. Wähle **Ordner hinzufügen**, um Dateien an einem anderen Speicherort zu verwenden. Du kannst auch Dateien oder einen Ordner in die App ziehen, um die Wiedergabe zu starten.
 
 Die Beta-Pakete sind nicht signiert. Windows kann daher eine Warnung zum Herausgeber oder zur Reputation anzeigen. Jede Veröffentlichung enthält `SHA256SUMS.txt`, um den Download zu überprüfen.
 
@@ -63,11 +63,11 @@ A, B und C sind auf unterschiedliche Bildfehler ausgelegt. Probiere sie in derse
 
 Auto verwendet die kleineren Shader M und S für Balanced und Performance. Bei jeder Folge und bei erneuter Auswahl von Auto beginnt es mit Balanced. Manuelle Modi behalten ihre gewählte Voreinstellung. Upscaling verändert das angezeigte Bild während der Wiedergabe und lässt die Videodatei unverändert.
 
-Für einen optionalen genaueren Blick wähle **More → Compare with original**. **Detail** vergrößert beide Ansichten. Der Vergleich verwendet eine zweite Wiedergabeansicht und erhöht die Auslastung.
+Für einen optionalen genaueren Blick wähle **⋯ → Mit Original vergleichen**. **Details** vergrößert beide Ansichten. Der Vergleich verwendet eine zweite Wiedergabeansicht und erhöht die Auslastung.
 
 ## Wiedergabe und Bibliothek
 
-**Audio** und **CC** wechseln die Spuren. In einem schmalen Fenster enthält **More** auch die Steuerung für Geschwindigkeit und Kapitel. Unter **Settings** kannst du die Schrittweiten für Springen und Lautstärke, bevorzugte Audio- und Untertitelsprachen sowie die Ausblendverzögerung der Vollbildsteuerung ändern. In der Vorschau von Beta 5 kannst du außerdem English, Deutsch oder Français als Oberflächensprache wählen. Speichere die Einstellung, um sie anzuwenden und für den nächsten Start beizubehalten.
+**Audio** und **CC** wechseln die Spuren. In einem schmalen Fenster enthält **⋯** auch die Steuerung für Geschwindigkeit und Kapitel. Unter **Einstellungen** kannst du die Schrittweiten für Springen und Lautstärke, bevorzugte Audio- und Untertitelsprachen sowie die Ausblendverzögerung der Vollbildsteuerung ändern. Du kannst außerdem English, Deutsch oder Français als Oberflächensprache wählen. Speichere die Einstellung, um sie anzuwenden und für den nächsten Start beizubehalten.
 
 Die Bibliothek zeigt deine Sammlung als Karten. Öffne eine Serie, um Staffel und Folge auszuwählen. Für Titelbilder kannst du `cover.jpg`, `cover.png`, `folder.jpg` oder `folder.png` im Serien- oder Staffelordner ablegen. Koma erzeugt andernfalls ein Vorschaubild aus einer lokalen Folge. Vorschaubilder werden im Datenordner der App zwischengespeichert und erzeugt, wenn keine Wiedergabe läuft oder diese pausiert ist.
 
@@ -87,7 +87,7 @@ Die Bibliothek zeigt deine Sammlung als Karten. Öffne eine Serie, um Staffel un
 
 Koma ist für Windows 11 x64 ausgelegt. Die Download-Pakete enthalten .NET und mpv, sodass keine separate Laufzeitinstallation nötig ist. Anime4K verwendet die GPU. Die Auslastung hängt von Quellauflösung, Bildrate, Fenster- oder Anzeigegröße und der gewählten Voreinstellung ab. Die manuellen Modi A, B und C verwenden aufwendigere Shader als Auto.
 
-Auf der RTX 3060 des Entwicklungs-PCs lief bei einer früheren Prüfung der Engine ein 1080p-HEVC-Video mit 24 Bildern pro Sekunde für 60 Sekunden mit Hardwaredecodierung und ohne verworfene Bilder durch Renderer oder Decoder. Dieses Ergebnis stammt aus der Zeit vor der Neugestaltung von Beta 5. Die Prüfung des lokalen Beta-5-Pakets bestätigt die Wiedergabe und das Laden der Shader auf diesem PC. Ergebnisse auf anderer Hardware sind noch nicht überprüft.
+Auf der RTX 3060 des Entwicklungs-PCs lief bei einer früheren Prüfung der Engine ein 1080p-HEVC-Video mit 24 Bildern pro Sekunde für 60 Sekunden mit Hardwaredecodierung und ohne verworfene Bilder durch Renderer oder Decoder. Dieses Ergebnis stammt aus der Zeit vor der Neugestaltung von Beta 5. Die Prüfung des Beta-5-Pakets bestätigt die Wiedergabe und das Laden der Shader auf diesem PC. Ergebnisse auf anderer Hardware sind noch nicht überprüft.
 
 Beginne bei Ruckeln mit Auto und schließe den Vergleich. Probiere Off, um die Leistung ohne Anime4K zu prüfen. Höhere Bildraten und größere Ausgabebilder können mehr GPU-Zeit benötigen. Halte den Grafiktreiber aktuell.
 
@@ -95,7 +95,7 @@ Beginne bei Ruckeln mit Auto und schließe den Vergleich. Probiere Off, um die L
 
 | Problem | Mögliche Lösung |
 | --- | --- |
-| Die Bibliothek ist leer | Lege Medien unter **Videos → Anime** ab oder verwende **Add folder** und aktualisiere anschließend die Ansicht. Prüfe, ob ein externes Laufwerk angeschlossen ist. |
+| Die Bibliothek ist leer | Lege Medien unter **Videos → Anime** ab oder verwende **Ordner hinzufügen** und aktualisiere anschließend die Ansicht. Prüfe, ob ein externes Laufwerk angeschlossen ist. |
 | Titelbilder fehlen | Füge eine unterstützte lokale Bilddatei hinzu oder pausiere die Wiedergabe und warte auf ein erzeugtes Vorschaubild. Bei einem beschädigten Titelbild kann Koma auf ein Vorschaubild aus einer Folge zurückgreifen. |
 | Anime4K konnte nicht starten | Entpacke die gesamte portable ZIP-Datei erneut und lasse Shader- und Engine-Dateien zusammen. Wenn das Laden der Shader fehlschlägt, gibt Koma das Originalvideo wieder. |
 | Die Wiedergabe ruckelt | Wähle Auto, schließe den Vergleich und probiere Off. Beachte die Hardwarehinweise oben. |

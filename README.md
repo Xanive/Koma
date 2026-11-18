@@ -8,13 +8,13 @@ Koma itself was completely vibe coded with Codex. Upscaling uses [Anime4K by blo
 
 ![Koma library with locally generated video thumbnails](docs/home.png)
 
-Screenshots show the local beta 5 preview with synthetic test clips and sample collection names.
+Screenshots show beta 5 with synthetic test clips and sample collection names.
 
 ## Beta status
 
-[Beta 4 is the current public release](https://github.com/Xanive/Koma/releases/tag/v0.1.0-beta.4). The redesigned beta 5 shown here is a local preview awaiting review and publication. Its appearance and new interface language selection are ahead of the public download.
+[Beta 5 is the current public release](https://github.com/Xanive/Koma/releases/tag/v0.1.0-beta.5). It includes the redesigned library, updated playback controls, and English, German, and French interfaces.
 
-The local beta 5 preview passed automated library, settings, and artwork checks, plus packaged playback and interface checks. Its installer compiled. Installation of that beta 5 installer, a clean Windows environment, physical display scaling and mixed-DPI monitors, and integrated-GPU performance still need testing. See the [release test guide](docs/Release-testing.md).
+Beta 5 passed automated library, settings, artwork, and localization checks, plus packaged playback and interface checks. Its installer compiled. Installation of that beta 5 installer, a clean Windows environment, physical display scaling and mixed-DPI monitors, and integrated-GPU performance still need testing. See the [release test guide](docs/Release-testing.md).
 
 <details>
 <summary>More screenshots</summary>
@@ -67,7 +67,7 @@ For an optional closer look, choose **More → Compare with original**. **Detail
 
 ## Playback and library
 
-**Audio** and **CC** switch tracks. **More** also contains speed and chapter controls in a narrow window. **Settings** lets you change seek and volume steps, audio and subtitle preferences, and the fullscreen control delay. In the beta 5 preview, you can also choose English, Deutsch, or Français for the interface. Save the setting to apply it and keep your choice for the next launch.
+**Audio** and **CC** switch tracks. **More** also contains speed and chapter controls in a narrow window. **Settings** lets you change seek and volume steps, audio and subtitle preferences, and the fullscreen control delay. You can also choose English, Deutsch, or Français for the interface. Save the setting to apply it and keep your choice for the next launch.
 
 The library shows your collection as cards. Open a show to choose its season and episode. For artwork, put `cover.jpg`, `cover.png`, `folder.jpg`, or `folder.png` in the show or season folder. Koma otherwise generates a thumbnail from a local episode. Thumbnails are cached in the app's data directory and generated while playback is idle or paused.
 
@@ -87,7 +87,7 @@ The library shows your collection as cards. Open a show to choose its season and
 
 Koma targets Windows 11 x64. Packaged downloads include .NET and mpv, so no separate runtime installation is needed. Anime4K uses the GPU. The work depends on source resolution, frame rate, window or display size, and the selected preset. Manual A, B, and C use heavier shaders than Auto.
 
-On the development RTX 3060, an earlier engine validation played 60 seconds of 1080p HEVC at 24 fps with hardware decoding and zero renderer or decoder drops. That result predates the beta 5 redesign. The local beta 5 packaged playback check confirms playback and shader loading on this PC. Results on other hardware remain unverified.
+On the development RTX 3060, an earlier engine validation played 60 seconds of 1080p HEVC at 24 fps with hardware decoding and zero renderer or decoder drops. That result predates the beta 5 redesign. The beta 5 packaged playback check confirms playback and shader loading on this PC. Results on other hardware remain unverified.
 
 For stuttering, start with Auto and close Compare. Try Off to check performance without Anime4K. Higher frame rates and larger output sizes can need more GPU time. Keep the graphics driver current.
 
