@@ -81,7 +81,8 @@ public partial class MainWindow
     private bool CanOpen(Episode episode)
     {
         if (closing) return false;
-        if (!File.Exists(episode.Path)) SetStatus("This episode could not be found. Reconnect the drive or locate its folder.");
+        if (Library.IsIncompletePath(episode.Path)) SetStatus("This download is still incomplete.");
+        else if (!File.Exists(episode.Path)) SetStatus("This episode could not be found. Reconnect the drive or locate its folder.");
         else if (!File.Exists(Engine)) SetStatus("The playback engine is missing. Extract the full portable ZIP or run the installer again.");
         else return true;
         return false;
@@ -96,6 +97,7 @@ public partial class MainWindow
         startingPlayback = true;
         int current = generation;
         playing = episode;
+        BeginWatchCoverage(episode);
         compareOnLoad = turnCompareBackOn;
         DisplayPlayer();
         QueueList.SelectedItem = episode;
@@ -166,6 +168,7 @@ public partial class MainWindow
         {
             case "file-loaded":
                 loaded = true;
+                _ = IdentifyPlayingAnime();
                 IgnoreDrops();
                 if (compareOnLoad)
                 {
@@ -174,15 +177,16 @@ public partial class MainWindow
                 }
                 break;
             case "seek":
+                watchCoverage?.Discontinuity();
                 IgnoreDrops();
                 break;
             case "property-change":
                 JsonElement data = message.Value("data");
                 switch (message.String("name"))
                 {
-                    case "time-pos": if (data.ValueKind == JsonValueKind.Number) position = data.Number(); break;
+                    case "time-pos": if (data.ValueKind == JsonValueKind.Number) { position = data.Number(); SampleWatchedPlayback(); } break;
                     case "duration": if (data.ValueKind == JsonValueKind.Number) duration = data.Number(); break;
-                    case "pause": paused = data.ValueKind == JsonValueKind.True; break;
+                    case "pause": watchCoverage?.Discontinuity(); paused = data.ValueKind == JsonValueKind.True; break;
                     case "mute": muted = data.ValueKind == JsonValueKind.True; break;
                     case "volume": if (data.ValueKind == JsonValueKind.Number) Settings.Volume = (int)Math.Clamp(data.Number(), 0, 100); break;
                     case "speed": if (data.Number() > 0) speed = data.Number(); break;
@@ -236,6 +240,7 @@ public partial class MainWindow
 
     private void Remember(bool completed = false)
     {
+        SaveWatchCoverage();
         historySaved = DateTimeOffset.UtcNow;
         if (playing is null || !loaded || !completed && position < 1) return;
         bool alreadyWatched = FindProgress(playing) is { Watched: true };
@@ -246,6 +251,7 @@ public partial class MainWindow
 
     private void ClosePlayback()
     {
+        playbackIdentification?.Cancel(); identifyingEpisode = null;
         generation++;
         startingPlayback = false;
         compareOnLoad = false;
@@ -253,6 +259,7 @@ public partial class MainWindow
         primary?.Dispose();
         primary = null;
         playing = null;
+        watchCoverage = null; coverageEpisode = null;
         loaded = paused = seeking = false;
         position = duration = videoDrops = decoderDrops = videoWidth = videoHeight = 0;
         tracks = chapters = selectedSubtitle = default;
@@ -276,6 +283,7 @@ public partial class MainWindow
 
     private Task Seek(double target)
     {
+        watchCoverage?.Discontinuity();
         IgnoreDrops();
         return Command("seek", target, "absolute+exact");
     }
@@ -292,6 +300,8 @@ public partial class MainWindow
 
     private void UpdateTransport()
     {
+        if (clock.Elapsed.TotalSeconds >= nextTrackingLabel)
+        { nextTrackingLabel = clock.Elapsed.TotalSeconds + 1; UpdatePlaybackTracking(); }
         updating = true;
         transport.Position.Maximum = Math.Max(1, duration);
         if (!seeking) transport.Position.Value = Math.Clamp(position, 0, transport.Position.Maximum);
@@ -482,9 +492,9 @@ public partial class MainWindow
     private async void WindowKey(object sender, KeyEventArgs e)
     {
         RevealControls();
-        if (HomePane.IsVisible && e.Key != Key.O) return;
-        if (QueueList.IsKeyboardFocusWithin && e.Key is Key.Up or Key.Down) return;
         bool control = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+        if (!PlayerPane.IsVisible && !(control && e.Key == Key.O)) return;
+        if (QueueList.IsKeyboardFocusWithin && e.Key is Key.Up or Key.Down) return;
         string? action = e.Key switch {
             Key.Left => control ? "previous" : "back", Key.Right => control ? "next" : "forward",
             Key.Up => "louder", Key.Down => "quieter", Key.F or Key.F11 => "fullscreen", Key.Escape => "escape",

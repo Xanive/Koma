@@ -32,6 +32,7 @@ $sourcesOutput = Join-Path $output "$name-engine-source.zip"
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 try {
     if ($PublishDirectory) {
+        & (Join-Path $PSScriptRoot 'Assert-CleanPublishDirectory.ps1') -PublishDirectory $PublishDirectory
         New-Item -Path $payload -ItemType Directory | Out-Null
         Get-ChildItem -LiteralPath $PublishDirectory -Force |
             Where-Object { $_.Name -notin @('data', 'engine', 'portable_config', 'portable.marker') -and $_.Extension -ne '.pdb' } |
@@ -40,7 +41,7 @@ try {
     else {
         Push-Location -LiteralPath $projectRoot
         try {
-            & $Dotnet publish 'src/Koma/Koma.csproj' --configuration Release --runtime win-x64 --self-contained true --output $payload "-p:Version=$Version" '-p:DebugType=None'
+            & $Dotnet publish 'src/Koma/Koma.csproj' --configuration Release --runtime win-x64 --self-contained true --output $payload "-p:Version=$Version" '-p:DebugType=None' '-p:RestoreLockedMode=true'
             if ($LASTEXITCODE -ne 0) { throw 'Building the self-contained player failed.' }
         }
         finally { Pop-Location }
@@ -66,6 +67,7 @@ try {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'licenses/NSIS-COPYING.txt') -Destination $payload
     Copy-Item -LiteralPath @((Join-Path $PSScriptRoot 'licenses/WPF-UI-MIT.txt'),
         (Join-Path $PSScriptRoot 'licenses/WPF-UI-ThirdPartyNotices.txt')) -Destination $payload
+    & (Join-Path $PSScriptRoot 'Copy-TorrentNotices.ps1') -Payload $payload
     $runtimeConfig = Get-Content -LiteralPath (Join-Path $payload 'Koma.runtimeconfig.json') -Raw | ConvertFrom-Json
     $nugetRoot = if ($env:NUGET_PACKAGES) { $env:NUGET_PACKAGES } else { Join-Path $env:USERPROFILE '.nuget/packages' }
     foreach ($framework in $runtimeConfig.runtimeOptions.includedFrameworks) {

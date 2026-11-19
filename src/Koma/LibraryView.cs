@@ -46,11 +46,20 @@ public partial class MainWindow
         bool compact = PlayerPane.IsVisible || ActualWidth < 900;
         SidebarWidth.Width = new(fullscreen ? 0 : compact ? 72 : 200);
         Sidebar.Visibility = fullscreen ? Visibility.Collapsed : Visibility.Visible;
-        foreach (var label in new[] { BrandLabel, LibraryLabel, PlayerLabel, FolderLabel, AddLabel, OpenFolderLabel, SettingsLabel })
+        foreach (var label in new[] { BrandLabel, LibraryLabel, PlayerLabel, TrackingLabel, DownloadsLabel, FolderLabel, AddLabel, OpenFolderLabel, SettingsLabel })
             label.Visibility = compact ? Visibility.Collapsed : Visibility.Visible;
+        BrandLabel.Visibility = FolderLabel.Visibility = compact || ActualHeight < 650 ? Visibility.Collapsed : Visibility.Visible;
         LibraryTab.Background = HomePane.IsVisible ? (Brush)FindResource("HeroBrush") : Brushes.Transparent;
         PlayerTab.Background = PlayerPane.IsVisible ? (Brush)FindResource("HeroBrush") : Brushes.Transparent;
+        TrackingTab.Background = TrackingPane.IsVisible ? (Brush)FindResource("HeroBrush") : Brushes.Transparent;
+        DownloadsTab.Background = DownloadsPane.IsVisible ? (Brush)FindResource("HeroBrush") : Brushes.Transparent;
         QueuePane.Visibility = queueOpen && !fullscreen ? Visibility.Visible : Visibility.Collapsed;
+        TrackingStats.Visibility = ActualHeight < 650 ? Visibility.Collapsed : Visibility.Visible;
+        TrackingSubtitle.Visibility = TrackingHelp.Visibility = TrackingConnection.Visibility = ActualHeight < 650 ? Visibility.Collapsed : Visibility.Visible;
+        TrackingAccountCard.Padding = new Thickness(ActualHeight < 650 ? 12 : 18);
+        DownloadsSubtitle.Visibility = DownloadSharingNote.Visibility = ActualHeight < 650 ? Visibility.Collapsed : Visibility.Visible;
+        if (downloadsReady) RenderDownloads();
+        UpdatePlaybackTracking();
         if (artwork is not null) UpdateArtworkActivity();
     }
 
@@ -120,6 +129,10 @@ public partial class MainWindow
 
     private void BackToLibrary(object sender, RoutedEventArgs e)
     {
+        recognitionRequest?.Cancel();
+        recognitionInFlight = null;
+        recognitionContext = null;
+        RecognitionPanel.Visibility = Visibility.Collapsed;
         selectedCollection = null;
         displayedSeason = null;
         ShowDetails.Visibility = Visibility.Collapsed;

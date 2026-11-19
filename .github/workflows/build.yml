@@ -28,7 +28,10 @@ jobs:
       - name: Build the Windows app
         run: dotnet build Koma.slnx --configuration Release
       - name: Run the automated tests
-        run: dotnet run --project tests/Koma.Tests/Koma.Tests.csproj --configuration Release
+        run: dotnet tests/Koma.Tests/bin/Release/net10.0/Koma.Tests.dll
+      - name: Check torrent publication and recovery with synthetic localhost transfers
+        timeout-minutes: 5
+        run: dotnet tests/Koma.Torrent.Tests/bin/Release/net10.0-windows/Koma.Torrent.Tests.dll
       - name: Set up the installer compiler
         if: github.event_name == 'workflow_dispatch'
         uses: nsis-dev/setup-nsis@v1

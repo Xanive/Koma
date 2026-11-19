@@ -11,5 +11,17 @@
     <EmbeddedResource Include="../../src/Koma/MainWindow.xaml;../../src/Koma/Controls.xaml" LogicalName="Koma.Test.%(Filename).xaml" />
     <Compile Include="../../src/Koma/Library.cs" Link="Library.cs" />
     <Compile Include="../../src/Koma/ArtworkPolicy.cs" Link="ArtworkPolicy.cs" />
+    <Compile Include="../../src/Koma/AnimeRecognition.cs" Link="AnimeRecognition.cs" />
+    <Compile Include="../../src/Koma/AnimeMatcher.cs" Link="AnimeMatcher.cs" />
+    <Compile Include="../../src/Koma/AutoTrackingMatch.cs" Link="AutoTrackingMatch.cs" />
+    <Compile Include="../../src/Koma/MalCandidateMetadata.cs" Link="MalCandidateMetadata.cs" />
+    <Compile Include="../../src/Koma/MalSearchClient.cs" Link="MalSearchClient.cs" />
+    <Compile Include="../../src/Koma/AnimeLink.cs" Link="AnimeLink.cs" />
+    <Compile Include="../../src/Koma/WatchTracking.cs" Link="WatchTracking.cs" />
+    <Compile Include="../../src/Koma/TrackingPolicy.cs" Link="TrackingPolicy.cs" />
+    <Compile Include="../../src/Koma/MalAccountClient.cs" Link="MalAccountClient.cs" />
+    <Compile Include="../../src/Koma/MalOAuthFlow.cs" Link="MalOAuthFlow.cs" />
+    <Compile Include="../../src/Koma/ReleaseFeed.cs" Link="ReleaseFeed.cs" />
+    <Compile Include="../../src/Koma/DownloadSources.cs" Link="DownloadSources.cs" />
   </ItemGroup>
 </Project>

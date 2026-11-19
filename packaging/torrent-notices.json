@@ -1,0 +1,35 @@
+﻿{
+    "Version":  1,
+    "Components":  [
+                       {
+                           "Id":  "MonoTorrent",
+                           "Version":  "3.0.2",
+                           "Source":  "https://github.com/alanmcgovern/monotorrent/tree/e78faebd0aec117146cffccaaea987ab0629eec0",
+                           "NoticeSha256":  "b44826a971bc09102317a4b8897a14a073406e54476248a79777d4f997bbd945",
+                           "Notice":  "MonoTorrent-3.0.2-MIT.txt",
+                           "License":  "MIT",
+                           "NuGetContentHash":  "kWy0mLj2MKX9uUGe3lnNYfyQhthjUK4IAMNJO8llXP9yB3ZYfGaAy9ag20wMcjTz2YfhKOW/uZ5FR//BYZGeYA==",
+                           "PackageArchiveSha512":  "vXogOTokXF2rXq+oMuWTFDRNPoM6mnRt/k257tRGw4Aqm1T3nIT5XqY1KbVDlS42U4DFXHHgvLGFRjP1ZmbK4w=="
+                       },
+                       {
+                           "Id":  "Mono.Nat",
+                           "Version":  "3.0.0",
+                           "Source":  "https://github.com/mono/Mono.Nat/tree/04754b1e5f139559736c41bf23c1752564d178d9",
+                           "NoticeSha256":  "9335b6384f39b0c1cba954536ad1622996b8459cc5f45c74dd0baf29540e9116",
+                           "Notice":  "Mono.Nat-3.0.0-MIT.txt",
+                           "License":  "MIT",
+                           "NuGetContentHash":  "LgRC8/8plJfvr1nCPmyHNIwP4fs346doMA/UVDZvFN0RfGJdyD2uS7Dl1AydxjVLrIvad8ghozI0vYFWcfPeYQ==",
+                           "PackageArchiveSha512":  "Zlic2ubHJ3hRaYVPlwoV1LAD9D4MkvIgnUPfvwFumeqRCNFHuLH/KwpuxLFjM0SfDjUpc/ks1bakgZS0lq0aDg=="
+                       },
+                       {
+                           "Id":  "ReusableTasks",
+                           "Version":  "4.0.0",
+                           "Source":  "https://github.com/alanmcgovern/ReusableTasks/tree/3c0c1929375b3b3ddc97ff84fe6c59b024f2e85b",
+                           "NoticeSha256":  "d3c22c6184ac13adf29239547044c8d905d6a6d657a7146708dc1d1c5f207bef",
+                           "Notice":  "ReusableTasks-4.0.0-MIT.txt",
+                           "License":  "MIT",
+                           "NuGetContentHash":  "6EKzscjq+Q+uxD0N5GWUBO2N34cuDiJ08ZxRs1lqS0Hwvnjp6AgimUIX/8dqIxRZbPOG4gcikTMo+PM4D9CfaQ==",
+                           "PackageArchiveSha512":  "Bq7xL0auhykQpdxORRYmSwLAMDdy8TmdSW3wviSNqHtHQ+kv+vtxVyUGxQ+fNa/aZnRXLz9uIMyFXpG3Dwgdfw=="
+                       }
+                   ]
+}

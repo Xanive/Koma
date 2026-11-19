@@ -16,6 +16,8 @@ Die Screenshots zeigen Beta 5 mit synthetischen Testclips und beispielhaften Sam
 
 Beta 5 hat automatisierte Prüfungen für Bibliothek, Einstellungen, Vorschaubilder und Übersetzungen sowie Prüfungen von Wiedergabe und Oberfläche aus dem fertigen Paket bestanden. Das Installationsprogramm wurde erfolgreich erstellt. Die Installation mit diesem Beta-5-Installationsprogramm, eine frische Windows-Umgebung, echte Anzeigeskalierung und Monitore mit unterschiedlichen DPI-Einstellungen sowie die Leistung integrierter Grafik müssen noch getestet werden. Siehe die [Anleitung für Veröffentlichungstests](docs/Release-testing.md).
 
+Der aktuelle Quellcode enthält außerdem eine optionale MyAnimeList-Übersicht, automatische Anime-Erkennung und Folgenfortschritt. Eindeutige Treffer können automatisch zugeordnet werden; bei unklaren Treffern hilft eine Auswahl mit Cover, Titel, Jahr und Folgenzahl. Diese Entwicklungsvorschau ist nicht Teil von Beta 5. Anmeldung und Listenabruf haben funktioniert; echte Fortschrittsänderungen müssen noch geprüft werden. Siehe die [Erkennungsanleitung](docs/Recognition.md) und die [Vorschau für den Anime-Fortschritt](docs/Tracking.md). Der Quellcode enthält außerdem eine [Download-Vorschau](docs/Downloads.md) mit Nyaa-Suche und MonoTorrent als integrierter Download-Engine; sie gehört nicht zu Beta 5.
+
 <details>
 <summary>Weitere Screenshots</summary>
 

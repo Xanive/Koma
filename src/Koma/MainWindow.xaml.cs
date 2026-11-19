@@ -38,6 +38,8 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         string data = portable ? Path.Combine(app, "data") : Path.Combine(local, "Koma");
         string legacy = Path.Combine(app, "portable_config", "player-settings.json");
         store = new(data, legacy, portable ? null : Path.Combine(local, "Local Anime Player"));
+        malCredentials = new(Path.Combine(data, "private", "mal-client-id.bin"));
+        malAccount = new(Path.Combine(data, "private", "mal-account.bin"), () => malCredentials.Read());
         UiLocalization.Apply(Settings.UiLanguage);
         artwork = new ArtworkCache(Path.Combine(data, "cache", "thumbnails"), Engine);
         statusDuringStartup = store.Notice;
@@ -53,15 +55,19 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         {
             statusDuringStartup = "The Anime folder could not be created. Choose another folder with Add folder.";
         }
+        torrentEngine = new(Path.Combine(data, "downloads"), DownloadRoot);
         QueueList.ItemsSource = queue;
         ControlsDock.Children.Add(transport);
         ConfigurePlayback();
+        InitializeTracking();
+        InitializeDownloads();
         transport.Queue.Click += (_, _) => ToggleQueue();
         transport.More.Click += (_, _) => OpenMore();
         Loaded += async (_, _) =>
         {
             SetStatus(statusDuringStartup);
             _ = RefreshLibrary();
+            if (malAccount.IsConnected) _ = RefreshTrackingAccount(false);
             if (paths.Length > 0) await OpenPaths(paths, false);
         };
         Activated += (_, _) =>
@@ -69,11 +75,30 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
             if (IsLoaded && DateTimeOffset.UtcNow - lastScan > TimeSpan.FromSeconds(1))
                 _ = RefreshLibrary();
         };
-        Closing += (_, _) =>
+        Closing += async (_, e) =>
         {
+            if (!downloadShutdownFinished)
+            {
+                e.Cancel = true;
+                if (downloadShuttingDown) return;
+                downloadShuttingDown = true;
+                closing = true;
+                downloadLifetime.Cancel(); feedRequest?.Cancel(); downloadTimer.Stop();
+                scanning?.Cancel(); opening?.Cancel(); recognitionRequest?.Cancel();
+                trackingLifetime.Cancel(); trackingWrites.Cancel(); accountRequest?.Cancel();
+                playbackIdentification?.Cancel(); matchCovers.Dispose();
+                try { await torrentEngine.ShutdownAsync(); }
+                catch (Exception error) when (DownloadError(error)) { }
+                finally { downloadShutdownFinished = true; _ = Dispatcher.BeginInvoke(Close); }
+                return;
+            }
             closing = true;
             scanning?.Cancel();
             opening?.Cancel();
+            recognitionRequest?.Cancel();
+            recognitionHttp?.Dispose();
+            downloadHttp?.Dispose();
+            trackingLifetime.Cancel(); trackingWrites.Cancel(); accountRequest?.Cancel(); malAccount.Dispose();
             artwork.Dispose();
             Remember();
             SaveSettings();
@@ -123,6 +148,8 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
             displayingFolders = false;
             RenderFolder(seasonName, seasonKey);
             RenderContinue();
+            if (trackingReady) RenderTracking();
+            if (trackingProfile is not null) _ = SyncCompletedEpisodes();
         }
         catch (OperationCanceledException) { }
         finally { if (scanning == request) scanning = null; }
@@ -165,6 +192,7 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         }).ToArray();
         Episodes.SelectedItem = Episodes.Items.Cast<EpisodeRow>().FirstOrDefault(x => x.Episode.Key == selected);
         RestoreScroll(Episodes, offset);
+        UpdateRecognition();
     }
 
     private Progress? FindProgress(Episode episode) =>
@@ -217,6 +245,8 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
 
     private void ShowHome(object sender, RoutedEventArgs e)
     {
+        DownloadsPane.Visibility = Visibility.Collapsed;
+        TrackingPane.Visibility = Visibility.Collapsed;
         PlayerPane.Visibility = Visibility.Collapsed;
         HomePane.Visibility = Visibility.Visible;
         Remember();
@@ -229,6 +259,8 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
 
     private void DisplayPlayer()
     {
+        DownloadsPane.Visibility = Visibility.Collapsed;
+        TrackingPane.Visibility = Visibility.Collapsed;
         HomePane.Visibility = Visibility.Collapsed;
         PlayerPane.Visibility = Visibility.Visible;
         PlayerTab.IsEnabled = true;

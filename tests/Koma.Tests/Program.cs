@@ -5,6 +5,16 @@ using Koma;
 
 var checks = new (string Name, Action<string> Body)[]
 {
+    ("Automatically links only unique exact regular-episode matches", AutoMatchChecks.Run),
+    ("Shares safe English titles, covers and matching metadata across MAL lists and search", MetadataChecks.Run),
+    ("Reads bounded release feeds and resolves only validated download sources", FeedChecks.Run),
+    ("Keeps incomplete downloads out of playback and preserves download preferences", DownloadPolicyChecks.Run),
+    ("Counts actual unique watched playback and advances consecutive episodes safely", TrackingChecks.Run),
+    ("Binds tracking consent to account, numbering and mapping and persists viewing evidence", TrackingPolicyChecks.Run),
+    ("Recognizes anime filenames without confusing episode and title numbers", RecognitionChecks.Run),
+    ("Requires safe matches and keeps MAL catalog requests private and read-only", MatchingChecks.Run),
+    ("Remembers anime links across relocation and separates loose shows", LinkChecks.Run),
+    ("Protects account requests, verifies loopback replies and reconciles progress writes", AccountChecks.Run),
     ("Keeps interface translations complete and preserves their format placeholders", CheckTranslations),
     ("Resolves every localized XAML caption", CheckLocalizedXaml),
     ("Persists the chosen interface language and recovers unsupported choices", CheckInterfaceLanguage),

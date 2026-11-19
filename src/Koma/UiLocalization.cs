@@ -30,5 +30,7 @@ public partial class MainWindow
         SetStatus(originalStatus);
         UpdateTransport();
         UpdateShell();
+        RenderTrackingFilters(); RenderTracking();
+        RefreshDownloadsLanguage();
     }
 }

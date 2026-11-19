@@ -43,6 +43,17 @@ internal sealed class Preferences
     public string AudioLanguage { get; set; } = "";
     public string SubtitleLanguage { get; set; } = "";
     public string UiLanguage { get; set; } = "en";
+    public bool OnlineAnimeRecognition { get; set; }
+    public Dictionary<string, AnimeLink> AnimeLinks { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public bool AutoTrackAnime { get; set; }
+    public string DownloadFolder { get; set; } = "";
+    public int DownloadLimitKiB { get; set; }
+    public int UploadLimitKiB { get; set; } = 1024;
+    public List<ManagedDownloadFolder> ManagedDownloadFolders { get; set; } = [];
+    public Dictionary<string, TrackingApproval> TrackingApprovals { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public List<string> DisabledTrackingKeys { get; set; } = [];
+    public Dictionary<string, WatchedEpisode> WatchedCoverage { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, int> TrackingReceipts { get; set; } = new(StringComparer.Ordinal);
     public List<Folder> Folders { get; set; } = [];
     public Dictionary<string, Progress> History { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }
@@ -84,6 +95,10 @@ internal sealed class PreferenceStore
         Data.VolumeStep = Math.Clamp(Data.VolumeStep, 1, 25);
         Data.FullscreenDelay = Math.Clamp(Data.FullscreenDelay, 1, 15);
         Data.Volume = Math.Clamp(Data.Volume, 0, 100);
+        Data.DownloadFolder = Path.IsPathFullyQualified(Data.DownloadFolder ?? "") ? Library.FullPathOrNull(Data.DownloadFolder) ?? "" : "";
+        Data.DownloadLimitKiB = Math.Clamp(Data.DownloadLimitKiB, 0, 1048576);
+        Data.UploadLimitKiB = Math.Clamp(Data.UploadLimitKiB, 1, 1048576);
+        Data.ManagedDownloadFolders = DownloadSources.NormalizeFolders(Data.ManagedDownloadFolders);
         Data.AudioLanguage ??= "";
         Data.SubtitleLanguage ??= "";
         if (!UiText.Supported(Data.UiLanguage)) Data.UiLanguage = "en";
@@ -114,6 +129,14 @@ internal sealed class PreferenceStore
                 history[key] = progress;
         }
         Data.History = history;
+        Data.AnimeLinks = AnimeLinkKeys.Normalize(Data.AnimeLinks);
+        Data.TrackingApprovals = TrackingPolicy.Normalize(Data.TrackingApprovals);
+        Data.DisabledTrackingKeys = (Data.DisabledTrackingKeys ?? []).Where(key => !string.IsNullOrWhiteSpace(key) &&
+            key.Length <= 4000 && !key.Any(char.IsControl)).Distinct(StringComparer.OrdinalIgnoreCase).Take(10000).ToList();
+        Data.WatchedCoverage = WatchTracking.Normalize(Data.WatchedCoverage);
+        Data.TrackingReceipts = (Data.TrackingReceipts ?? []).Where(x => x.Key.Length is > 0 and < 80 &&
+            x.Key.All(c => char.IsAsciiDigit(c) || c == '/') && x.Value is >= 0 and <= 10000).Take(10000)
+            .ToDictionary(x => x.Key, x => x.Value, StringComparer.Ordinal);
     }
 
     private Preferences? Read(string path)
@@ -256,6 +279,7 @@ internal static partial class Library
         {
             token.ThrowIfCancellationRequested();
             if (FullPathOrNull(input) is not { } path) continue;
+            if (IsIncompletePath(path)) continue;
             if (IsSupportedVideo(path) && File.Exists(path) && files.Add(path))
                 episodes.Add(Identify(path, roots));
             else if (Directory.Exists(path))
@@ -290,12 +314,16 @@ internal static partial class Library
 
     private static string[] Files(string path) =>
         Entries(() => Directory.EnumerateFiles(path, "*", Enumeration))
-            .Where(IsSupportedVideo).OrderBy(file => Path.GetFileName(file)!, Natural).ToArray();
+            .Where(file => !IsIncompletePath(file) && IsSupportedVideo(file)).OrderBy(file => Path.GetFileName(file)!, Natural).ToArray();
 
     private static bool IsSupportedVideo(string path) => Extensions.Contains(Path.GetExtension(path));
 
     private static string[] ReadDirectories(string path) =>
-        Entries(() => Directory.EnumerateDirectories(path, "*", Enumeration)).OrderBy(path => Path.GetFileName(path)!, Natural).ToArray();
+        Entries(() => Directory.EnumerateDirectories(path, "*", Enumeration)).Where(path => !IsIncompletePath(path))
+            .OrderBy(path => Path.GetFileName(path)!, Natural).ToArray();
+
+    internal static bool IsIncompletePath(string path) => path.Replace('\\', '/').Split('/').Any(part =>
+        part.Equals(".koma-incomplete", StringComparison.OrdinalIgnoreCase));
 
     private static string[] Entries(Func<IEnumerable<string>> enumerate)
     {

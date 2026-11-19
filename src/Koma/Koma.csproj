@@ -10,10 +10,13 @@
     <Product>Koma</Product>
     <Description>Local anime player for Windows</Description>
     <Version>0.1.0</Version>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Strings/*.json" LogicalName="Koma.Strings.%(Filename)%(Extension)" />
     <PackageReference Include="WPF-UI" Version="4.3.0" />
+    <PackageReference Include="MonoTorrent" Version="3.0.2" />
     <Resource Include="Assets\Player.ico" />
     <None Update="player-input.conf" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

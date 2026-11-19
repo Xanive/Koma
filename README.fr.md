@@ -16,6 +16,8 @@ Les captures montrent la bêta 5 avec des clips de test synthétiques et des nom
 
 La bêta 5 a réussi les vérifications automatisées de la bibliothèque, des paramètres, des vignettes et des traductions, ainsi que les vérifications de lecture et d'interface à partir du paquet distribué. Son programme d'installation a été compilé. L'installation avec ce programme de la bêta 5, un environnement Windows vierge, la mise à l'échelle réelle de l'affichage et les écrans avec des réglages DPI différents, ainsi que les performances sur GPU intégré restent à tester. Consultez le [guide de test des versions](docs/Release-testing.md).
 
+Le code source comprend aussi un tableau de suivi MyAnimeList facultatif, la reconnaissance automatique des anime et la progression des épisodes. Les correspondances certaines peuvent être associées automatiquement ; les cas incertains proposent un choix avec affiche, titres, année et nombre d'épisodes. Cet aperçu de développement ne fait pas partie de la bêta 5. La connexion et le chargement de la liste ont fonctionné ; les mises à jour réelles de progression restent à valider. Consultez le [guide de reconnaissance](docs/Recognition.md) et le [guide du suivi](docs/Tracking.md). Le code source comprend aussi un [aperçu des téléchargements intégrés](docs/Downloads.md), avec recherche Nyaa et moteur MonoTorrent ; il ne fait pas partie de la bêta 5.
+
 <details>
 <summary>Autres captures d'écran</summary>
 
