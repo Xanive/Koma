@@ -12,11 +12,14 @@ Die Screenshots zeigen Beta 5 mit synthetischen Testclips und beispielhaften Sam
 
 ## Beta-Status
 
-[Beta 5 ist die aktuelle öffentliche Version](https://github.com/Xanive/Koma/releases/tag/v0.1.0-beta.5). Sie enthält die neu gestaltete Bibliothek, überarbeitete Wiedergabesteuerung und eine Oberfläche auf Englisch, Deutsch oder Französisch.
+[v0.2.2-beta.1 ist die aktuelle Vorschauversion](https://github.com/Xanive/Koma/releases/tag/v0.2.2-beta.1). Sie ergänzt optionales MyAnimeList-Tracking, eine visuelle Anime-Auswahl, integrierte Downloads und die Wiederherstellung abgeschlossener Downloads, die in der Bibliothek fehlen. Anime4K-Upscaling in Echtzeit bleibt Komas Hauptfunktion.
 
-Beta 5 hat automatisierte Prüfungen für Bibliothek, Einstellungen, Vorschaubilder und Übersetzungen sowie Prüfungen von Wiedergabe und Oberfläche aus dem fertigen Paket bestanden. Das Installationsprogramm wurde erfolgreich erstellt. Die Installation mit diesem Beta-5-Installationsprogramm, eine frische Windows-Umgebung, echte Anzeigeskalierung und Monitore mit unterschiedlichen DPI-Einstellungen sowie die Leistung integrierter Grafik müssen noch getestet werden. Siehe die [Anleitung für Veröffentlichungstests](docs/Release-testing.md).
+Der Windows-Build, 27 automatisierte Prüfungen und 30 synthetische Torrent-Szenarien sowie Prüfungen von Wiedergabe und Oberfläche aus dem fertigen Paket waren erfolgreich. Echte MyAnimeList-Fortschrittsänderungen, Anzeigeskalierung, integrierte Grafik und längere Übertragungen müssen noch geprüft werden. Siehe die [Anleitung für Veröffentlichungstests](docs/Release-testing.md).
 
-Der aktuelle Quellcode enthält außerdem eine optionale MyAnimeList-Übersicht, automatische Anime-Erkennung und Folgenfortschritt. Eindeutige Treffer können automatisch zugeordnet werden; bei unklaren Treffern hilft eine Auswahl mit Cover, Titel, Jahr und Folgenzahl. Diese Entwicklungsvorschau ist nicht Teil von Beta 5. Anmeldung und Listenabruf haben funktioniert; echte Fortschrittsänderungen müssen noch geprüft werden. Siehe die [Erkennungsanleitung](docs/Recognition.md) und die [Vorschau für den Anime-Fortschritt](docs/Tracking.md). Der Quellcode enthält außerdem eine [Download-Vorschau](docs/Downloads.md) mit Nyaa-Suche und MonoTorrent als integrierter Download-Engine; sie gehört nicht zu Beta 5.
+MyAnimeList benötigt eine privat konfigurierte, registrierte Client-ID; Zugangsdaten werden nicht mitgeliefert. Automatische Updates sind optional und erfordern 80 % tatsächlich angesehene Wiedergabezeit. Siehe die [Erkennungsanleitung](docs/Recognition.md), [Tracking-Anleitung](docs/Tracking.md) und [Download-Anleitung](docs/Downloads.md).
+
+Schließe Koma vor dem Start des neuen Installationsprogramms; gespeicherte Ordner, Verlauf, Einstellungen und Download-Warteschlange bleiben erhalten. Entpacke beim portablen Update die ganze ZIP-Datei in einen neuen beschreibbaren Ordner und kopiere vor dem Start deinen bisherigen `data`-Ordner hinein. Geschützte Konto- und Download-Daten bleiben an dasselbe Windows-Konto gebunden.
+
 
 <details>
 <summary>Weitere Screenshots</summary>

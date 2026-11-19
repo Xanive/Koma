@@ -1,6 +1,6 @@
 # MyAnimeList tracking and dashboard — local preview
 
-The current source implements optional MyAnimeList account sign-in, a tracking dashboard and automatic episode updates. These features are **not included in the public beta 5 download**. Live catalogue matching and account connection/list loading have been verified; writing progress to a real account has **not** been verified. This is a development preview, not a release-readiness claim.
+Koma v0.2.2-beta.1 includes experimental MyAnimeList account sign-in, a tracking dashboard and automatic episode updates. Live catalogue matching and account connection/list loading have been verified; writing progress to a real account has **not** been verified. This is a development preview, not a release-readiness claim.
 
 Local playback and the library remain usable without a network connection or MyAnimeList account. [Anime recognition](Recognition.md) can identify local filenames and search the catalogue independently of account tracking.
 

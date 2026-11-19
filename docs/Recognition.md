@@ -1,6 +1,6 @@
-# Automatic anime matching — local preview
+# Automatic anime matching — beta preview
 
-Koma identifies the anime being watched and connects it to MyAnimeList. This development preview is not part of public beta 5. Account connection and list loading have been verified; live watch-count updates remain unverified. No identifier or token is included in source or packages.
+Koma identifies the anime being watched and connects it to MyAnimeList. This feature is included experimentally in v0.2.2-beta.1. Account connection and list loading have been verified; live watch-count updates remain unverified. No identifier or token is included in source or packages.
 
 ## The normal flow
 

@@ -10,7 +10,7 @@ param(
     [string]$OutputDirectory,
     [string]$PublishDirectory,
     [ValidatePattern('^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$')]
-    [string]$Version = '0.1.0-beta.5',
+    [string]$Version = '0.2.2-beta.1',
     [switch]$LocalPreview
 )
 

@@ -1,6 +1,6 @@
-# Built-in downloads — development preview
+# Built-in downloads — beta preview
 
-Koma's current source includes a Downloads page powered by **MonoTorrent 3.0.2**. It uses an existing BitTorrent engine with Koma's interface and library integration. This development preview is not included in the public beta 5 downloads.
+Koma's current source includes a Downloads page powered by **MonoTorrent 3.0.2**. It uses an existing BitTorrent engine with Koma's interface and library integration. These features are included experimentally in v0.2.2-beta.1.
 
 ![Nyaa browser with canned release metadata](screenshots/downloads-preview.png)
 
@@ -45,7 +45,7 @@ The package lock pins direct and transitive dependencies. Packaging verifies and
 - A localhost-only pair of engines transferred a synthetic 23 MB HEVC fixture. Tests verified pause, shutdown/restart, resume and hash checking, exact SHA-256 content, one completed publication, zero upload after completion, collision protection and file retention. A separate magnet test verified actual local metadata exchange and a complete transfer. No internet peers or real anime content were used.
 - The actual WPF interface passed offline startup, canned Nyaa search and selected-page resolution, metadata pause, queue actions, speed-limit validation, keyboard isolation and English/German/French layouts down to 680 × 480. A simulated publication during an existing scan was discovered by the follow-up without changing real paused mpv playback or its queue. Normal async shutdown passed as well.
 - Read-only live requests verified the configured site's RSS format and resolution of a selected detail page to a magnet. No public torrent or media download was started.
-- A clean self-contained publish passed dependency-notice checks; packaging rejected a test private-data directory. Local update installers have been built; these features have not been published in a GitHub release.
+- A clean self-contained publish passed dependency-notice checks; packaging rejected a test private-data directory. The v0.2.2-beta.1 release includes an installer, portable ZIP, matching engine source and SHA-256 checksums.
 - The standalone `tests/Koma.Torrent.Tests` suite adds 30 synthetic scenarios: actual localhost transfers in four torrent formats, deterministic leftover temporary filenames, verified legacy recovery, corruption and collision preservation, cancellation/shutdown retries, and missing-v2-hash rejection. It is included in the solution and Windows workflow. After building, run `dotnet tests/Koma.Torrent.Tests/bin/Release/net10.0-windows/Koma.Torrent.Tests.dll` on Windows. Tests generate their own small temporary payloads and never use the real Koma profile.
 - An offscreen WPF startup test loaded a synthetic legacy encrypted queue, verified and restored its completed temporary file, and confirmed its collection appeared on Home without a manual refresh or a normal peer engine. The existing Downloads interface and paused-playback refresh checks also passed.
 

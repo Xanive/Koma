@@ -12,11 +12,14 @@ Screenshots show beta 5 with synthetic test clips and sample collection names.
 
 ## Beta status
 
-[Beta 5 is the current public release](https://github.com/Xanive/Koma/releases/tag/v0.1.0-beta.5). It includes the redesigned library, updated playback controls, and English, German, and French interfaces.
+[v0.2.2-beta.1 is the current preview release](https://github.com/Xanive/Koma/releases/tag/v0.2.2-beta.1). It adds optional MyAnimeList tracking and a visual anime chooser, built-in downloads, and recovery for completed downloads missing from the library. Real-time Anime4K upscaling remains Koma’s main purpose.
 
-Beta 5 passed automated library, settings, artwork, and localization checks, plus packaged playback and interface checks. Its installer compiled. Installation of that beta 5 installer, a clean Windows environment, physical display scaling and mixed-DPI monitors, and integrated-GPU performance still need testing. See the [release test guide](docs/Release-testing.md).
+The Windows build, 27 automated checks and 30 synthetic torrent scenarios passed, alongside packaged playback and interface checks. Live MyAnimeList progress updates, physical display scaling, integrated-GPU performance and broader long-transfer behavior still need validation. See the [release test guide](docs/Release-testing.md).
 
-The working source also includes an optional MyAnimeList tracking dashboard, automatic anime identification, and episode progress. Clear matches can track automatically; uncertain matches use a visual chooser with covers, titles, years, and episode counts. This development preview is not part of beta 5. Account connection and list loading have worked, while live progress updates still need validation. See the [matching guide](docs/Recognition.md) and [tracking preview guide](docs/Tracking.md). The source also includes a [built-in download preview](docs/Downloads.md) with Nyaa browsing and MonoTorrent-powered transfers; it is not part of beta 5.
+MyAnimeList requires a privately configured registered Client ID; no credentials are bundled. Automatic updates are optional and require 80% actual watched coverage. See the [matching guide](docs/Recognition.md), [tracking guide](docs/Tracking.md) and [download guide](docs/Downloads.md).
+
+Close Koma before running the new installer; your saved folders, history, settings and download queue are preserved. For a portable update, extract the full ZIP into a new writable folder and copy your previous `data` folder before opening Koma. Protected account and download data remain tied to the same Windows account.
+
 
 <details>
 <summary>More screenshots</summary>
