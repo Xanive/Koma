@@ -1,22 +1,45 @@
-# Release testing
+# Release checklist
 
-Use Windows 11 x64 and the exact installer and ZIP associated with the release's SHA-256 file. Use synthetic videos or media that you have permission to share for any public test evidence.
+Use the exact Windows 11 x64 packages and release checksums. Share only synthetic or permitted media.
 
-## Clean environment
+## Installation and library
 
-1. Check the SHA-256 files. Disconnect networking. Install for the current account, then verify Windows **Videos → Anime** exists before opening the app. Put episodes 02 and 10 under a show and season folder. Launch from the Start menu and confirm both appear without starting playback automatically.
-2. Repeat with the extracted portable ZIP on a machine without the .NET Desktop Runtime or mpv installed. Confirm watch history is written beside the portable player under `data`.
-3. Play an episode partway, close and restart, and verify Continue Watching resumes it. Let it finish and verify the watched indicator and next episode. Test a removable drive, relocating a saved folder, Unicode paths, and a large collection.
-4. Uninstall and confirm the app files and shortcut are removed and media is still available.
+- [ ] Install offline on a clean PC without .NET or mpv.
+- [ ] Put episodes 02 and 10 in **Videos → Anime** before launch. Confirm correct order and no automatic playback.
+- [ ] Test the portable ZIP, empty folders, Unicode names and large collections.
+- [ ] Check resume, watched markers and next-episode playback after restarting.
+- [ ] Disconnect and relocate a saved folder; progress should survive.
+- [ ] Update and uninstall. Media and user data should remain.
 
-## Media and visuals
+## Playback and appearance
 
-Use `tests/New-PlaybackFixtures.ps1 -OutputDirectory <scratch folder>` with an FFmpeg build that includes libx264 and libx265. The fixtures use test patterns and tones. They include a 90-second 1080p HEVC MKV with two audio tracks, styled ASS subtitles and two chapters, a short H.264 MP4, an external SRT, and a damaged MKV.
+- [ ] Check MKV/MP4, H.264/HEVC, dual audio, ASS/external subtitles and chapters. Recover from a damaged clip.
+- [ ] Test sustained 1080p upscaling on the RTX 3060 and Auto fallback on integrated graphics.
+- [ ] Check windowed, maximized and fullscreen layouts at 100%, 150% and 200%, including mixed-DPI monitors.
+- [ ] Check readable Audio/CC menus, the app icon, keyboard focus, scrubbing, reduced motion and fullscreen control fading.
+- [ ] Paused Compare should settle within one frame after seeking. Check Detail zoom and autoplay.
 
-- Play MKV and MP4 clips covering H.264, HEVC, dual audio, chapters, styled ASS subtitles, and external subtitles. Test a damaged clip followed by a working episode.
-- Verify manual Anime4K modes and sustained 1080p playback on the RTX 3060. Test the automatic tier on an integrated GPU and record when the active tier lowers.
-- Seek while Compare is paused and verify that the two views settle within one frame. Verify Detail zoom and both panes after resizing and entering fullscreen.
-- Check the empty player, active playback and fullscreen at 100%, 150% and 200% Windows scaling. Repeat on monitors with different scaling. Check menus, drag-to-seek, focus indicators and reduced motion.
-- Verify the player icon in the title bar and the dark Audio, CC, Speed, Chapters, and Quality menus in windowed and fullscreen playback. Check text and selection marks against light video frames.
+## Tracking and downloads
 
-Record the Windows build, graphics driver, display scale and package hash. Include the available results with the beta draft. Promote the release to `v1.0.0` after completing these checks and resolving playback blockers and reproducible visual issues in the tested workflows.
+- [ ] Test MyAnimeList sign-in, list loading, token refresh, account switching and disconnecting.
+- [ ] Test clear and ambiguous matches. One confirmation should save the show and episode number.
+- [ ] Watch past 80% coverage and verify the correct MAL update. Seeking to the end, replaying or watching out of order must not falsely advance progress.
+- [ ] Pause, restart and resume downloads. Completed episodes should appear without disrupting playback.
+- [ ] Recover old completed `.!mt` files. Preserve damaged files and filename conflicts.
+
+## Record the result
+
+Record the package hash, Windows build, GPU/driver and display scale. Beta notes should name remaining gaps. Tag `v1.0.0` only after checks pass and playback or visual blockers are resolved.
+
+<details>
+<summary>Generate playback fixtures</summary>
+
+With FFmpeg including libx264 and libx265:
+
+```powershell
+./tests/New-PlaybackFixtures.ps1 -OutputDirectory "$env:TEMP/Koma-fixtures"
+```
+
+Creates synthetic video, dual audio, subtitles, chapters and a damaged file.
+
+</details>

@@ -1,131 +1,91 @@
 # Koma
 
-[English](README.md) | [Deutsch](README.de.md) | [Français](README.fr.md)
+[English](README.md) · [Deutsch](README.de.md) · [Français](README.fr.md)
 
-Ein offline nutzbarer Anime-Player für Windows mit Anime4K-Upscaling in Echtzeit. Durchstöbere **Videos → Anime**, füge Ordner von anderen Laufwerken hinzu und setze deine Folgen mit adaptivem Upscaling fort.
+Ein Anime-Player für Windows mit **Anime4K-Upscaling in Echtzeit**. Anime auf dem PC behalten, Folge öffnen und lossehen.
 
-Koma selbst wurde vollständig per Vibe Coding mit Codex entwickelt. Das Upscaling verwendet [Anime4K von bloc97 und Mitwirkenden](https://github.com/bloc97/Anime4K), die Wiedergabe verwendet [mpv](https://mpv.io/), und die Oberfläche verwendet [WPF UI](https://github.com/lepoco/wpfui).
+**[v0.2.2-beta.1 herunterladen](https://github.com/Xanive/Koma/releases/tag/v0.2.2-beta.1)** · Windows 11 x64 · Installer oder portable ZIP
 
-![Koma-Bibliothek mit lokal erzeugten Video-Vorschaubildern](docs/screenshots/library.de.png)
+![Koma-Bibliothek](docs/screenshots/library.de.png)
 
-Die Screenshots zeigen Beta 5 mit synthetischen Testclips und beispielhaften Sammlungsnamen.
+## Loslegen
 
-## Beta-Status
+1. Installiere Koma oder entpacke die **gesamte** portable ZIP und öffne `Koma.exe`. Alles für die Wiedergabe ist dabei.
+2. Lege Folgen unter **Videos → Anime** ab. Für eine Sammlung auf einem anderen Laufwerk wählst du **Ordner hinzufügen**.
+3. Wähle eine Serie und starte die Wiedergabe. Du kannst auch ein Video oder einen Ordner in Koma ziehen.
 
-[v0.2.2-beta.1 ist die aktuelle Vorschauversion](https://github.com/Xanive/Koma/releases/tag/v0.2.2-beta.1). Sie ergänzt optionales MyAnimeList-Tracking, eine visuelle Anime-Auswahl, integrierte Downloads und die Wiederherstellung abgeschlossener Downloads, die in der Bibliothek fehlen. Anime4K-Upscaling in Echtzeit bleibt Komas Hauptfunktion.
+Deine Dateien bleiben an ihrem Platz. Koma merkt sich deinen Fortschritt.
 
-Der Windows-Build, 27 automatisierte Prüfungen und 30 synthetische Torrent-Szenarien sowie Prüfungen von Wiedergabe und Oberfläche aus dem fertigen Paket waren erfolgreich. Echte MyAnimeList-Fortschrittsänderungen, Anzeigeskalierung, integrierte Grafik und längere Übertragungen müssen noch geprüft werden. Siehe die [Anleitung für Veröffentlichungstests](docs/Release-testing.md).
+<details>
+<summary>Koma aktualisieren</summary>
 
-MyAnimeList benötigt eine privat konfigurierte, registrierte Client-ID; Zugangsdaten werden nicht mitgeliefert. Automatische Updates sind optional und erfordern 80 % tatsächlich angesehene Wiedergabezeit. Siehe die [Erkennungsanleitung](docs/Recognition.md), [Tracking-Anleitung](docs/Tracking.md) und [Download-Anleitung](docs/Downloads.md).
+Schließe Koma und starte den neuen Installer. Einstellungen, Bibliothek, Verlauf und Download-Warteschlange bleiben erhalten.
 
-Schließe Koma vor dem Start des neuen Installationsprogramms; gespeicherte Ordner, Verlauf, Einstellungen und Download-Warteschlange bleiben erhalten. Entpacke beim portablen Update die ganze ZIP-Datei in einen neuen beschreibbaren Ordner und kopiere vor dem Start deinen bisherigen `data`-Ordner hinein. Geschützte Konto- und Download-Daten bleiben an dasselbe Windows-Konto gebunden.
+Entpacke beim portablen Update in einen neuen Ordner und kopiere vor dem Start deinen bisherigen `data`-Ordner hinein. Geschützte Konto- und Download-Daten funktionieren nur mit demselben Windows-Konto.
 
+Beta-Downloads sind nicht signiert. Windows kann deshalb eine Herausgeberwarnung anzeigen. Prüfsummen stehen auf der Release-Seite.
+
+</details>
+
+## Funktionen
+
+- Ordnerbasierte Bibliothek mit Staffeln, Titelbildern und **Weiterschauen**.
+- MKV und MP4, mehrere Audiospuren, Untertitel, Kapitel und Wiedergabetempo.
+- Vollbildsteuerung, die beim Schauen ausgeblendet wird.
+- Optionales MyAnimeList-Tracking und integrierte Downloads.
+- Oberfläche auf Deutsch, Englisch und Französisch.
+
+## Upscaling
+
+Starte mit **Auto**. Der Modus passt die Qualität an, wenn deine Grafikkarte nicht nachkommt. Upscaling verändert das Bild bei der Wiedergabe; deine Videodatei bleibt unverändert.
+
+| Modus | Ausgangspunkt |
+| --- | --- |
+| Auto | Empfehlung für den Alltag |
+| A | Unscharfe Quellen, oft 1080p |
+| B | Sanftere Bildaufbereitung, oft 720p |
+| C | Entrauschen und Hochskalieren, oft 480p |
+| Off | Originalwiedergabe |
+
+Wähle, was für dich am besten aussieht. Unter **… → Mit Original vergleichen** kannst du genauer hinsehen. Bei Ruckeln schließe den Vergleich und probiere Auto oder Off.
+
+## Steuerung
+
+| Taste | Aktion |
+| --- | --- |
+| ← / → | Zurück- / vorspulen |
+| ↑ / ↓ | Lautstärke |
+| Leertaste | Wiedergabe / Pause |
+| F oder F11 | Vollbild |
+| Escape | Vollbild verlassen |
+| M | Stummschalten |
+| Strg+← / Strg+→ | Vorherige / nächste Folge |
+
+Mit **Audio** und **CC** wechselst du die Spuren. In den **Einstellungen** änderst du Sprungweite, Lautstärkeschritte, Sprachen und die Ausblendzeit im Vollbild.
+
+## Tracking und Downloads
+
+**MyAnimeList:** Verbinde dein Konto mit einer eigenen registrierten Client-ID und aktiviere das automatische Tracking. Eindeutige Treffer erkennt Koma selbst; bei unklaren Serien wählst du einmal aus. Updates erfordern **80 % tatsächlich angesehene Wiedergabezeit**. Fortschrittsänderungen mit echten Konten müssen noch getestet werden. [Tracking einrichten](docs/Tracking.md) · [Den richtigen Anime wählen](docs/Recognition.md)
+
+**Downloads:** Durchsuche Nyaa oder füge einen Magnet-Link oder Torrent hinzu. Fertige Folgen erscheinen in der Bibliothek. Unfertige Downloads bleiben nach dem Neustart pausiert. [Download-Anleitung](docs/Downloads.md)
+
+## Hilfe und Danksagungen
+
+Bibliothek leer? Prüfe deinen Ordner und wähle **Bibliothek aktualisieren**. Bei anderen Problemen [erstelle einen Fehlerbericht](https://github.com/Xanive/Koma/issues/new/choose) mit deiner Koma-Version und einer kurzen Beschreibung.
+
+Koma wurde vollständig per **Vibe Coding mit Codex** entwickelt. Das Upscaling stammt von **[Anime4K von bloc97 und Mitwirkenden](https://github.com/bloc97/Anime4K)**. Die Wiedergabe nutzt [mpv](https://mpv.io/), die Oberfläche [WPF UI](https://github.com/lepoco/wpfui).
+
+Komas Code steht unter [GPL-3.0-or-later](LICENSE). [Drittanbieter](THIRD-PARTY.md) · [Koma selbst bauen](docs/Engine-provenance.md) · [Release-Tests](docs/Release-testing.md)
 
 <details>
 <summary>Weitere Screenshots</summary>
 
-### Oberflächensprache und Wiedergabeeinstellungen
+![Einstellungen](docs/screenshots/settings.png)
 
-![Oberflächensprache und Wiedergabeeinstellungen](docs/screenshots/settings.de.png)
+![Staffeln und Folgen](docs/screenshots/episodes.png)
 
-### Staffeln und Folgen
+![Wiedergabesteuerung](docs/screenshots/controls.png)
 
-![Staffelauswahl und Folgenliste in einem kleineren Fenster](docs/screenshots/episodes.png)
-
-### Kompakte Wiedergabesteuerung
-
-![Kompakte Wiedergabesteuerung mit Upscaling-Auswahl](docs/screenshots/controls.de.png)
-
-Alle Aufnahmen verwenden synthetische Testclips. Sie zeigen die Oberfläche und ihre Anordnung.
+Diese Screenshots zeigen Beta 5 mit Beispielsammlungen und erzeugten Testvideos.
 
 </details>
-
-## Installieren und Sammlung öffnen
-
-1. Lade das Installationsprogramm oder die portable ZIP-Datei für Windows 11 x64 von [GitHub Releases](https://github.com/Xanive/Koma/releases) herunter. Laufzeitumgebung und Wiedergabe-Engine sind enthalten. Entpacke für die portable Version die gesamte ZIP-Datei in einen beschreibbaren Ordner und öffne `Koma.exe`.
-2. Lege Videodateien oder Staffelordner unter **Videos → Anime** ab. Das Installationsprogramm erstellt diesen Ordner. Die portable App erstellt ihn beim ersten Start. Du kannst ihn auch vorher selbst anlegen.
-3. Öffne den Player und wähle eine Folge. Wähle **Ordner hinzufügen**, um Dateien an einem anderen Speicherort zu verwenden. Du kannst auch Dateien oder einen Ordner in die App ziehen, um die Wiedergabe zu starten.
-
-Die Beta-Pakete sind nicht signiert. Windows kann daher eine Warnung zum Herausgeber oder zur Reputation anzeigen. Jede Veröffentlichung enthält `SHA256SUMS.txt`, um den Download zu überprüfen.
-
-Der Player belässt Videodateien an ihrem ursprünglichen Speicherort. Einstellungen und Wiedergabeverlauf der installierten App liegen unter `%LOCALAPPDATA%\Koma`. Die portable Version speichert sie in ihrem eigenen Ordner `data`.
-
-Wenn du eine installierte Beta von Local Anime Player verwendet hast, übernimmt Koma beim ersten Start deren gespeicherte Ordner und Wiedergabeverlauf. Kopiere beim Aktualisieren einer portablen Beta deren Ordner `data` vor dem Start in den neu entpackten Koma-Ordner.
-
-## Upscaling auswählen
-
-Öffne während der Wiedergabe **Upscaling**. Beginne mit **Auto** und probiere dann bei Bedarf einen manuellen Modus für ein anderes Bild aus.
-
-| Auswahl | Funktion | Wann ausprobieren |
-| --- | --- | --- |
-| Auto | Beginnt mit Modus A in der Qualitätsstufe Balanced. Wechselt zu Performance und dann zu Off, wenn wiederholte Bildaussetzer auf eine überlastete GPU hinweisen. | Für die tägliche Wiedergabe und auf einem unbekannten PC. |
-| A | Rekonstruiert unscharfe Linien und skaliert anschließend hoch. Verwendet die feste Shader-Voreinstellung VL. | Für die meisten 1080p-Anime und Quellen mit sichtbarer Unschärfe. |
-| B | Verwendet eine sanftere Rekonstruktion und skaliert anschließend hoch. Verwendet die feste Shader-Voreinstellung VL. | Für viele 720p-Quellen, besonders herunterskaliertes Material mit Ringing oder Treppeneffekten. |
-| C | Entrauscht beim Hochskalieren ohne separaten Rekonstruktionsdurchlauf. Verwendet die feste Shader-Voreinstellung VL. | Für manche auf 480p herunterskalierte Videos und sauberere Quellen, die weniger Rekonstruktion benötigen. |
-| Off | Entfernt die Anime4K-Shader und setzt die normale Videowiedergabe fort. | Zum Prüfen des Quellbilds oder zum Verringern der GPU-Auslastung. |
-
-A, B und C sind auf unterschiedliche Bildfehler ausgelegt. Probiere sie in derselben Szene aus und wähle den Modus, der dir am besten gefällt. Diese Ausgangspunkte folgen der [Anime4K-Anleitung für Windows](https://github.com/bloc97/Anime4K/blob/master/md/GLSL_Instructions_Windows_MPV.md) und der [erweiterten Anleitung zu den Modi](https://github.com/bloc97/Anime4K/blob/master/md/GLSL_Instructions_Advanced.md).
-
-Auto verwendet die kleineren Shader M und S für Balanced und Performance. Bei jeder Folge und bei erneuter Auswahl von Auto beginnt es mit Balanced. Manuelle Modi behalten ihre gewählte Voreinstellung. Upscaling verändert das angezeigte Bild während der Wiedergabe und lässt die Videodatei unverändert.
-
-Für einen optionalen genaueren Blick wähle **⋯ → Mit Original vergleichen**. **Details** vergrößert beide Ansichten. Der Vergleich verwendet eine zweite Wiedergabeansicht und erhöht die Auslastung.
-
-## Wiedergabe und Bibliothek
-
-**Audio** und **CC** wechseln die Spuren. In einem schmalen Fenster enthält **⋯** auch die Steuerung für Geschwindigkeit und Kapitel. Unter **Einstellungen** kannst du die Schrittweiten für Springen und Lautstärke, bevorzugte Audio- und Untertitelsprachen sowie die Ausblendverzögerung der Vollbildsteuerung ändern. Du kannst außerdem English, Deutsch oder Français als Oberflächensprache wählen. Speichere die Einstellung, um sie anzuwenden und für den nächsten Start beizubehalten.
-
-Die Bibliothek zeigt deine Sammlung als Karten. Öffne eine Serie, um Staffel und Folge auszuwählen. Für Titelbilder kannst du `cover.jpg`, `cover.png`, `folder.jpg` oder `folder.png` im Serien- oder Staffelordner ablegen. Koma erzeugt andernfalls ein Vorschaubild aus einer lokalen Folge. Vorschaubilder werden im Datenordner der App zwischengespeichert und erzeugt, wenn keine Wiedergabe läuft oder diese pausiert ist.
-
-| Tastenkürzel | Aktion |
-| --- | --- |
-| Links / Rechts | Zurück / vorwärts springen |
-| Hoch / Runter | Lautstärke erhöhen / verringern |
-| Strg+Links / Strg+Rechts | Vorherige / nächste Folge in der Warteschlange abspielen |
-| Leertaste | Wiedergabe / Pause |
-| F oder F11 | Vollbild umschalten |
-| Escape | Vollbild verlassen |
-| C | Vergleich umschalten |
-| M | Stummschaltung umschalten |
-| Strg+O | Dateien öffnen |
-
-## Hardware und Leistung
-
-Koma ist für Windows 11 x64 ausgelegt. Die Download-Pakete enthalten .NET und mpv, sodass keine separate Laufzeitinstallation nötig ist. Anime4K verwendet die GPU. Die Auslastung hängt von Quellauflösung, Bildrate, Fenster- oder Anzeigegröße und der gewählten Voreinstellung ab. Die manuellen Modi A, B und C verwenden aufwendigere Shader als Auto.
-
-Auf der RTX 3060 des Entwicklungs-PCs lief bei einer früheren Prüfung der Engine ein 1080p-HEVC-Video mit 24 Bildern pro Sekunde für 60 Sekunden mit Hardwaredecodierung und ohne verworfene Bilder durch Renderer oder Decoder. Dieses Ergebnis stammt aus der Zeit vor der Neugestaltung von Beta 5. Die Prüfung des Beta-5-Pakets bestätigt die Wiedergabe und das Laden der Shader auf diesem PC. Ergebnisse auf anderer Hardware sind noch nicht überprüft.
-
-Beginne bei Ruckeln mit Auto und schließe den Vergleich. Probiere Off, um die Leistung ohne Anime4K zu prüfen. Höhere Bildraten und größere Ausgabebilder können mehr GPU-Zeit benötigen. Halte den Grafiktreiber aktuell.
-
-## Fehlerbehebung
-
-| Problem | Mögliche Lösung |
-| --- | --- |
-| Die Bibliothek ist leer | Lege Medien unter **Videos → Anime** ab oder verwende **Ordner hinzufügen** und aktualisiere anschließend die Ansicht. Prüfe, ob ein externes Laufwerk angeschlossen ist. |
-| Titelbilder fehlen | Füge eine unterstützte lokale Bilddatei hinzu oder pausiere die Wiedergabe und warte auf ein erzeugtes Vorschaubild. Bei einem beschädigten Titelbild kann Koma auf ein Vorschaubild aus einer Folge zurückgreifen. |
-| Anime4K konnte nicht starten | Entpacke die gesamte portable ZIP-Datei erneut und lasse Shader- und Engine-Dateien zusammen. Wenn das Laden der Shader fehlschlägt, gibt Koma das Originalvideo wieder. |
-| Die Wiedergabe ruckelt | Wähle Auto, schließe den Vergleich und probiere Off. Beachte die Hardwarehinweise oben. |
-| Audio oder Untertitel haben die falsche Sprache | Wähle unter **Audio** oder **CC** eine Spur aus. Bevorzugte Audio- und Untertitelsprachen gelten beim Öffnen der nächsten Folge. Unter **CC** kannst du auch eine externe Untertiteldatei öffnen. |
-| Einstellungen oder Verlauf werden nicht gespeichert | Prüfe, ob der Datenordner der installierten App oder der portable Ordner `data` beschreibbar ist. Entpacke die portable ZIP-Datei in einen Ordner, in den du schreiben kannst. |
-| Ein Clip lässt sich nicht öffnen | Probiere eine andere Datei und melde anschließend Containerformat, Codec und sichtbare Fehlermeldungen der betroffenen Datei. |
-
-[Melde ein Problem mit Wiedergabe, Bibliothek oder Darstellung](https://github.com/Xanive/Koma/issues/new/choose). Nenne die Koma-Version, Windows-Version, GPU, den gewählten Upscaling-Modus und die Schritte zum Nachstellen.
-
-## Lokal erstellen
-
-Verwende Windows 11 x64, das in `global.json` ausgewählte .NET-10-SDK, Python 3.11 oder neuer, 7-Zip und NSIS 3.13. Führe diese Befehle im Stammordner des Repositorys in PowerShell aus. Die genannten Werkzeuge müssen verfügbar sein.
-
-```powershell
-dotnet build Koma.slnx -c Release
-dotnet run --project tests/Koma.Tests/Koma.Tests.csproj -c Release
-./packaging/Build-Packages.ps1
-```
-
-Beim ersten Erstellen der Pakete werden die festgelegte MSYS2-Engine, der zugehörige Quellcode und die Shader heruntergeladen. Installationsprogramm, portable ZIP-Datei, ZIP-Datei mit zugehörigem Quellcode und SHA-256-Prüfsummen werden unter `dist/` abgelegt. Plane etwa 1,8 GB für Downloads ein. Mit `-EngineCacheDirectory` kannst du zuvor heruntergeladene MSYS2-Archive wiederverwenden. Siehe [Herkunft der Engine](docs/Engine-provenance.md) und [Drittanbieterkomponenten](THIRD-PARTY.md). Die separate Option `-LocalPreview` verwendet die ursprüngliche Test-Engine für private Tests.
-
-## GitHub-Vorabveröffentlichung vorbereiten
-
-Starte unter **Actions** den Workflow **Windows build and release draft**, lege die Versionsnummer fest und wähle **draft**. Der Workflow prüft die festgelegten Engine-Eingaben und bereitet beide Windows-Downloads zusammen mit dem zugehörigen Quellcode zur Prüfung vor. Folge vor der Veröffentlichung der [Anleitung für Veröffentlichungstests](docs/Release-testing.md).
-
-## Lizenz und Danksagungen
-
-Der Quellcode der App steht unter [GPL-3.0-or-later](LICENSE). Anime4K, mpv, WPF UI und die anderen enthaltenen Komponenten behalten ihre eigenen Lizenzen. Siehe [Drittanbieterkomponenten und Hinweise](THIRD-PARTY.md).
