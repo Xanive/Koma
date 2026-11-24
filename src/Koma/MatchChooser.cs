@@ -52,7 +52,7 @@ public partial class MainWindow
         footer.Children.Add(numberRow);
         var numberHelp = ChooserNote("The suggested number is filled in. Change it for split seasons or absolute numbering."); footer.Children.Add(numberHelp);
         var buttons = new WrapPanel { HorizontalAlignment = HorizontalAlignment.Right, Margin = new(0, 10, 0, 0) };
-        var connection = new Button { Content = UiText.Translate("Connection settings") };
+        var connection = new Button { Content = UiText.Translate(MalClientId is null ? "Advanced connection" : "Connect MyAnimeList") };
         var ignore = new Button { Content = UiText.Translate("Disable for this show") };
         var use = new Button { Content = UiText.Translate("Use this match"), IsEnabled = false, Style = (Style)FindResource("PrimaryButton") };
         buttons.Children.Add(connection); buttons.Children.Add(ignore); buttons.Children.Add(use); footer.Children.Add(buttons);
@@ -156,7 +156,7 @@ public partial class MainWindow
             status.Text = UiText.Translate("Looking for a MyAnimeList match…");
             try
             {
-                if (malCredentials.Read() is null) { status.Text = UiText.Translate("Connect MyAnimeList or save a Client ID to search."); return; }
+                if (MalClientId is null) { status.Text = UiText.Translate("MyAnimeList isn't configured in this build. Try the latest Koma release."); return; }
                 var candidates = await SearchAnime(title, request.Token, explicitSearch: true);
                 if (!alive || request.IsCancellationRequested || searching != request || accountEpoch != accountGeneration) return;
                 foreach (var candidate in candidates) knownCandidates[candidate.Id] = candidate;
@@ -178,12 +178,16 @@ public partial class MainWindow
         else if (Settings.AnimeLinks.TryGetValue(context.Key, out var saved) &&
             (knownCandidates.GetValueOrDefault(saved.MalId) ?? accountEntries.GetValueOrDefault(saved.MalId)?.Candidate) is { } remembered)
             Fill([remembered]);
-        if (malCredentials.Read() is not null && results.Items.Count == 0)
+        if (MalClientId is not null && results.Items.Count == 0)
             dialog.Loaded += async (_, _) => await Search();
         dialog.Closed += (_, _) => { alive = false; lifetime.Cancel(); searching?.Cancel(); };
         dialog.ShowDialog();
         UpdateRecognition(); UpdatePlaybackTracking(); RenderTracking();
-        if (configure) ConfigureTrackingClient();
+        if (configure)
+        {
+            if (MalClientId is not null) ConnectTracking(this, new());
+            else ConfigureTrackingClient();
+        }
         else if (Settings.AutoTrackAnime) _ = SyncCompletedEpisodes();
     }
 

@@ -26,6 +26,8 @@ Use `-EngineCacheDirectory <folder>` to reuse cached `binary-packages/` and `sou
 
 For GitHub builds, open **Actions > Windows build and release draft**, set the version and enable **draft**. Review the [release checklist](Release-testing.md), then publish all generated assets together.
 
+For app-wide MyAnimeList sign-in, the maintainer sets the repository secret **`KOMA_MAL_CLIENT_ID`** once. Local builds can use the same environment variable or `-MalClientId`. Register `http://127.0.0.1:43857/callback` as the redirect URL. Packaging includes only the native app identifier and callback; the identifier is intentionally public in released apps. Never supply a client secret or user tokens. This setup is for maintainers, not each user.
+
 **Keep `-LocalPreview` builds private.** They use the older test engine described in [third-party notices](../THIRD-PARTY.md).
 
 ## Where the engine comes from

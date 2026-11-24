@@ -5,6 +5,7 @@ using Koma;
 
 var checks = new (string Name, Action<string> Body)[]
 {
+    ("Loads only a public Koma app registration with a fixed callback and no secrets", AppRegistrationChecks.Run),
     ("Automatically links only unique exact regular-episode matches", AutoMatchChecks.Run),
     ("Shares safe English titles, covers and matching metadata across MAL lists and search", MetadataChecks.Run),
     ("Reads bounded release feeds and resolves only validated download sources", FeedChecks.Run),

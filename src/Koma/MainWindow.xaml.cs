@@ -39,7 +39,8 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         string legacy = Path.Combine(app, "portable_config", "player-settings.json");
         store = new(data, legacy, portable ? null : Path.Combine(local, "Local Anime Player"));
         malCredentials = new(Path.Combine(data, "private", "mal-client-id.bin"));
-        malAccount = new(Path.Combine(data, "private", "mal-account.bin"), () => malCredentials.Read());
+        malRegistration = MalAppRegistration.Read(app);
+        malAccount = new(Path.Combine(data, "private", "mal-account.bin"), () => MalClientId);
         UiLocalization.Apply(Settings.UiLanguage);
         artwork = new ArtworkCache(Path.Combine(data, "cache", "thumbnails"), Engine);
         statusDuringStartup = store.Notice;

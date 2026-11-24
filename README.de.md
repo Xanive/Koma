@@ -4,7 +4,7 @@
 
 Ein Anime-Player für Windows mit **Anime4K-Upscaling in Echtzeit**. Anime auf dem PC behalten, Folge öffnen und lossehen.
 
-**[v0.2.2-beta.1 herunterladen](https://github.com/Xanive/Koma/releases/tag/v0.2.2-beta.1)** · Windows 11 x64 · Installer oder portable ZIP
+**[v0.2.2-beta.2 herunterladen](https://github.com/Xanive/Koma/releases/tag/v0.2.2-beta.2)** · Windows 11 x64 · Installer oder portable ZIP
 
 ![Koma-Bibliothek](docs/screenshots/library.de.png)
 
@@ -65,7 +65,7 @@ Mit **Audio** und **CC** wechselst du die Spuren. In den **Einstellungen** ände
 
 ## Tracking und Downloads
 
-**MyAnimeList:** Verbinde dein Konto mit einer eigenen registrierten Client-ID und aktiviere das automatische Tracking. Eindeutige Treffer erkennt Koma selbst; bei unklaren Serien wählst du einmal aus. Updates erfordern **80 % tatsächlich angesehene Wiedergabezeit**. Fortschrittsänderungen mit echten Konten müssen noch getestet werden. [Tracking einrichten](docs/Tracking.md) · [Den richtigen Anime wählen](docs/Recognition.md)
+**MyAnimeList:** Klicke auf **MyAnimeList verbinden**, melde dich an und aktiviere das automatische Tracking. In offiziellen Versionen musst du keine Client-ID einrichten. Eindeutige Treffer erkennt Koma selbst; bei unklaren Serien wählst du einmal aus. Updates erfordern **80 % tatsächlich angesehene Wiedergabezeit**. Fortschrittsänderungen mit echten Konten müssen noch getestet werden. [Tracking einrichten](docs/Tracking.md) · [Den richtigen Anime wählen](docs/Recognition.md)
 
 **Downloads:** Durchsuche Nyaa oder füge einen Magnet-Link oder Torrent hinzu. Fertige Folgen erscheinen in der Bibliothek. Unfertige Downloads bleiben nach dem Neustart pausiert. [Download-Anleitung](docs/Downloads.md)
 

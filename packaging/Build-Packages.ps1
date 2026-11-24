@@ -9,8 +9,9 @@ param(
     [string]$ShaderArchive,
     [string]$OutputDirectory,
     [string]$PublishDirectory,
+    [string]$MalClientId = $env:KOMA_MAL_CLIENT_ID,
     [ValidatePattern('^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$')]
-    [string]$Version = '0.2.2-beta.1',
+    [string]$Version = '0.2.2-beta.2',
     [switch]$LocalPreview
 )
 
@@ -51,6 +52,7 @@ try {
             throw "Missing $required in the self-contained Windows x64 build."
         }
     }
+    & (Join-Path $PSScriptRoot 'Copy-MalAppRegistration.ps1') -Payload $payload -ClientId $MalClientId
     $engine = Join-Path $payload 'engine'
     & (Join-Path $PSScriptRoot 'Prepare-Engine.ps1') -Destination $engine -MpvArchive $MpvArchive -ShaderArchive $ShaderArchive -SevenZip $SevenZip -ShadersOnly:(-not $LocalPreview)
     $sourceFile = Join-Path $staging 'engine-source.zip'

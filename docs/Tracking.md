@@ -5,10 +5,10 @@ Connect MyAnimeList to see your list in Koma and update episode progress while y
 ## Set it up
 
 1. Open **Tracking → Connect MyAnimeList**.
-2. Enter your own registered Client ID if asked, then sign in and approve Koma in your browser. No shared ID or client secret is bundled.
+2. Sign in and approve Koma in your browser. Official releases use Koma's app registration, so you don't need to create a Client ID.
 3. Turn on **Automatically identify anime and update MyAnimeList**.
 
-Registering your own app? Use `http://127.0.0.1:43857/callback` as its redirect URL. This address points back to Koma on your PC. [MyAnimeList app registration](https://myanimelist.net/apiconfig/create)
+Existing account connections keep working after an update. **Advanced connection** still lets you use your own registration if you prefer; it's optional.
 
 Koma tries to identify the show automatically. If it needs help, use **Change anime match**. [Choosing the right anime](Recognition.md)
 

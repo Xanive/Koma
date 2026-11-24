@@ -20,6 +20,7 @@ public partial class MainWindow
     private readonly Dictionary<int, string> trackingNotes = [];
     private readonly HashSet<int> trackingBlocked = [];
     private readonly SemaphoreSlim trackingSyncGate = new(1);
+    private Action<Uri> trackingBrowserLauncher = uri => Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true });
     private MalAccountProfile? trackingProfile;
     private int accountGeneration;
     private int? trackingNextOffset;
@@ -96,6 +97,7 @@ public partial class MainWindow
             "Connect to see your MyAnimeList list. Local playback works offline.");
         TrackingConnect.Visibility = connected ? Visibility.Collapsed : Visibility.Visible;
         TrackingConnect.IsEnabled = !accountBusy;
+        TrackingSettings.IsEnabled = !accountBusy;
         TrackingConnect.Content = UiText.Translate(accountBusy ? "Waiting for sign-in…" : "Connect MyAnimeList");
         TrackingDisconnect.Visibility = connected || accountBusy ? Visibility.Visible : Visibility.Collapsed;
         TrackingSync.IsEnabled = connected && !accountBusy;
@@ -159,7 +161,11 @@ public partial class MainWindow
     private async void ConnectTracking(object sender, RoutedEventArgs e)
     {
         if (accountBusy) return;
-        if (malCredentials.Read() is null) { ConfigureTrackingClient(); if (malCredentials.Read() is null) return; }
+        if (MalClientId is null)
+        {
+            trackingMessage = "MyAnimeList isn't configured in this build. Try the latest Koma release.";
+            RenderTracking(); return;
+        }
         int current = ++accountGeneration;
         accountRequest?.Cancel(); accountRequest = CancellationTokenSource.CreateLinkedTokenSource(trackingLifetime.Token);
         var token = accountRequest.Token;
@@ -167,7 +173,7 @@ public partial class MainWindow
         RenderTracking();
         try
         {
-            await malAccount.ConnectAsync(uri => Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true }), token);
+            await malAccount.ConnectAsync(trackingBrowserLauncher, token);
             if (closing || current != accountGeneration) return;
             Settings.AutoTrackAnime = false; SaveSettings();
             accountBusy = false;
@@ -175,28 +181,52 @@ public partial class MainWindow
         }
         catch (OperationCanceledException) { if (current == accountGeneration) trackingMessage = "Sign-in was cancelled or timed out. Local playback still works."; }
         catch (Exception error) when (TrackingError(error))
-        { if (current == accountGeneration) trackingMessage = "MyAnimeList could not connect. Check the registered Client ID, callback and browser approval, then try again."; }
+        { if (current == accountGeneration) trackingMessage = "MyAnimeList could not connect. Try signing in again."; }
         finally { if (current == accountGeneration) { accountBusy = false; RenderTracking(); } }
     }
 
+    private void OpenTrackingSettings(object sender, RoutedEventArgs e) => ConfigureTrackingClient();
+
     private void ConfigureTrackingClient()
     {
-        var dialog = TrackingDialog("MyAnimeList Client ID", out var body);
+        var dialog = TrackingDialog("Advanced MyAnimeList connection", out var body);
+        body.Children.Add(TrackingNote("Koma handles sign-in for you. A custom app registration is optional."));
         body.Children.Add(TrackingNote("Enter the Client ID from your registered desktop application. Never enter a client secret."));
         var field = new PasswordBox { Margin = new(0, 14, 0, 14), Padding = new(8) };
         System.Windows.Automation.AutomationProperties.SetName(field, UiText.Translate("MyAnimeList Client ID"));
         body.Children.Add(field);
         var note = TrackingNote(""); body.Children.Add(note);
-        var save = new Button { Content = UiText.Translate("Save connection"), HorizontalAlignment = HorizontalAlignment.Right };
+        var buttons = new WrapPanel { HorizontalAlignment = HorizontalAlignment.Right };
+        var useKoma = new Button { Content = UiText.Translate("Use Koma connection"),
+            Visibility = malRegistration is null ? Visibility.Collapsed : Visibility.Visible,
+            IsEnabled = malCredentials.Read() is not null };
+        useKoma.Click += (_, _) =>
+        {
+            try
+            {
+                if (malRegistration is null) return;
+                bool changed = MalClientId != malRegistration.ClientId;
+                malCredentials.Clear();
+                if (changed) DisconnectTracking(this, new());
+                field.Clear(); dialog.Close();
+            }
+            catch (Exception error) when (TrackingError(error))
+            { note.Text = UiText.Translate("The connection could not be saved. Check the Client ID and try again."); }
+        };
+        var save = new Button { Content = UiText.Translate("Save connection") };
         save.Click += (_, _) =>
         {
             try {
-                if (malCredentials.Read() != field.Password.Trim()) DisconnectTracking(this, new());
-                malCredentials.Save(field.Password.Trim()); field.Clear(); dialog.Close();
+                string id = field.Password.Trim();
+                bool changed = MalClientId != id;
+                malCredentials.Save(id);
+                if (changed) DisconnectTracking(this, new());
+                field.Clear(); dialog.Close();
             }
             catch (Exception error) when (TrackingError(error)) { note.Text = UiText.Translate("The connection could not be saved. Check the Client ID and try again."); }
         };
-        body.Children.Add(save); dialog.Closed += (_, _) => field.Clear(); dialog.ShowDialog();
+        buttons.Children.Add(useKoma); buttons.Children.Add(save); body.Children.Add(buttons);
+        dialog.Closed += (_, _) => field.Clear(); dialog.ShowDialog();
     }
 
     private void DisconnectTracking(object sender, RoutedEventArgs e)

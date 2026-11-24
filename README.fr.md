@@ -4,7 +4,7 @@
 
 Un lecteur d’anime pour Windows avec **mise à l’échelle Anime4K en temps réel**. Gardez vos anime sur votre PC, ouvrez un épisode et profitez-en.
 
-**[Télécharger v0.2.2-beta.1](https://github.com/Xanive/Koma/releases/tag/v0.2.2-beta.1)** · Windows 11 x64 · Installation ou ZIP portable
+**[Télécharger v0.2.2-beta.2](https://github.com/Xanive/Koma/releases/tag/v0.2.2-beta.2)** · Windows 11 x64 · Installation ou ZIP portable
 
 ![Bibliothèque Koma](docs/screenshots/library.fr.png)
 
@@ -65,7 +65,7 @@ Utilisez **Audio** et **CC** pour changer de piste. Dans **Paramètres**, régle
 
 ## Suivi et téléchargements
 
-**MyAnimeList :** connectez votre compte avec votre propre identifiant client enregistré, puis activez le suivi automatique. Les correspondances claires sont reconnues ; en cas de doute, choisissez une fois la bonne série. Les mises à jour exigent **80 % réellement visionnés**. Les mises à jour de progression sur de vrais comptes restent à valider. [Configurer le suivi](docs/Tracking.md) · [Choisir le bon anime](docs/Recognition.md)
+**MyAnimeList :** cliquez sur **Connecter MyAnimeList**, connectez-vous, puis activez le suivi automatique. Les versions officielles ne demandent aucun identifiant client à configurer. Les correspondances claires sont reconnues ; en cas de doute, choisissez une fois la bonne série. Les mises à jour exigent **80 % réellement visionnés**. Les mises à jour de progression sur de vrais comptes restent à valider. [Configurer le suivi](docs/Tracking.md) · [Choisir le bon anime](docs/Recognition.md)
 
 **Téléchargements :** recherchez sur Nyaa ou ajoutez un lien magnet ou torrent. Les épisodes terminés apparaissent dans la bibliothèque. Les téléchargements inachevés restent en pause à la réouverture. [Guide des téléchargements](docs/Downloads.md)
 

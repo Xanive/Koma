@@ -10,6 +10,8 @@ namespace Koma;
 public partial class MainWindow
 {
     private readonly MalCredentialStore malCredentials;
+    private readonly MalAppRegistration? malRegistration;
+    private string? MalClientId => malCredentials.Read() ?? malRegistration?.ClientId;
     private HttpClient? recognitionHttp;
     private CancellationTokenSource? recognitionRequest;
     private readonly SemaphoreSlim recognitionGate = new(1);
@@ -74,7 +76,7 @@ public partial class MainWindow
         RecognitionStatus.Text = context.Detection.NeedsReview ? UiText.Translate("Review the title and season before linking.") :
             UiText.Translate("Recognized locally · not linked to MyAnimeList");
         if (context.Key.Length > 0 && !context.Detection.NeedsReview && AutomaticLookupAllowed &&
-            !Settings.DisabledTrackingKeys.Contains(context.Key, StringComparer.OrdinalIgnoreCase) && malCredentials?.Read() is not null)
+            !Settings.DisabledTrackingKeys.Contains(context.Key, StringComparer.OrdinalIgnoreCase) && MalClientId is not null)
             _ = MatchCurrentAnime(context);
     }
 
@@ -140,7 +142,7 @@ public partial class MainWindow
                 throw new HttpRequestException("Wait before trying MyAnimeList again.");
             if (recognitionCache.TryGetValue(key, out var cached) && DateTimeOffset.UtcNow - cached.At < TimeSpan.FromMinutes(5))
                 return cached.Items;
-            string clientId = malCredentials.Read() ?? throw new InvalidOperationException();
+            string clientId = MalClientId ?? throw new InvalidOperationException();
             TimeSpan delay = TimeSpan.FromSeconds(1) - (DateTimeOffset.UtcNow - lastRecognitionSearch);
             if (delay > TimeSpan.Zero) await Task.Delay(delay, token);
             token.ThrowIfCancellationRequested();

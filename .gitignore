@@ -9,6 +9,7 @@ dist/
 engine/
 data/
 portable.marker
+Koma.MyAnimeList.json
 *.user
 *.pdb
 *.log

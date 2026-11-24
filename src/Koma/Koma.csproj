@@ -9,7 +9,7 @@
     <ApplicationIcon>Assets\Player.ico</ApplicationIcon>
     <Product>Koma</Product>
     <Description>Local anime player for Windows</Description>
-    <Version>0.2.2-beta.1</Version>
+    <Version>0.2.2-beta.2</Version>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
   </PropertyGroup>

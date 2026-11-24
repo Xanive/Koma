@@ -21,6 +21,7 @@
     <Compile Include="../../src/Koma/TrackingPolicy.cs" Link="TrackingPolicy.cs" />
     <Compile Include="../../src/Koma/MalAccountClient.cs" Link="MalAccountClient.cs" />
     <Compile Include="../../src/Koma/MalOAuthFlow.cs" Link="MalOAuthFlow.cs" />
+    <Compile Include="../../src/Koma/MalAppRegistration.cs" Link="MalAppRegistration.cs" />
     <Compile Include="../../src/Koma/ReleaseFeed.cs" Link="ReleaseFeed.cs" />
     <Compile Include="../../src/Koma/DownloadSources.cs" Link="DownloadSources.cs" />
   </ItemGroup>
